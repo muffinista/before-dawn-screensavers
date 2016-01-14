@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style type="text/css">
+      #content {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        overflow: auto;
+      }
+    </style>
+    <script>
+      onload = function() {
+        var dest = unescape(window.urlParams.load_url);
+        var webview = document.getElementById("content");
+
+        console.log("let's go to " + dest);
+        webview.src = dest;     
+      }      
+    </script>
+  </head>
+  <body>
+    <webview id="content"></webview>
+  </body>
+</html>
