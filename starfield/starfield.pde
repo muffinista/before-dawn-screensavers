@@ -62,9 +62,15 @@ int display_height;
 
 
 void setup() {
-  display_width = screen.width;
-  display_height = screen.height;
-
+  if ( typeof(window.urlParams) !== "undefined" ) {
+    display_width = window.urlParams.width;
+    display_height = window.urlParams.height;
+  }
+  else {
+    display_width = screen.width;
+    display_height = screen.height;
+  }
+  
   fps = 30;
 
 	size(display_width, display_height, P3D);
