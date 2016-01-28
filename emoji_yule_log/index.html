@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>emoji fireplace</title>
+  <script language="javascript" type="text/javascript" src="./libraries/p5.js"></script>
+  <script src="./libraries/lodash.min.js"></script>
+  <script language="javascript" type="text/javascript" src="./sketch.js"></script>
+  <style>
+   body {
+     padding: 0; margin: 0;
+     background: black;
+   }
+
+   div {
+     width: 1200px;
+     margin: 0 auto;
+   }
+   #fireplace {
+     position: relative;
+     clear: both;
+   }
+   #fireplace canvas {
+     position: absolute;
+     top: 225px;
+     left: 360px;
+   }
+   img {
+     opacity: 0.6;
+   }
+
+   #sounds {
+     position: absolute;
+     left: -9999px;
+   }
+
+   .credits {
+     margin-top: 200px;
+     color: #888888;
+   }
+   a {
+     color: #660000;
+     text-decoration: none;
+   }
+  </style>
+   <link rel="shortcut icon" type="image/png" href="https://raw.githubusercontent.com/twitter/twemoji/gh-pages/72x72/1f525.png"/>
+</head>
+
+
+<body>
+  <div id="fireplace">
+    <img src="./background.jpg" />
+  </div>
+
+  <div id="sounds">
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/lJ3H_SR1dXU?autoplay=1&loop=1&playlist=lJ3H_SR1dXU" frameborder="0" allowfullscreen></iframe>
+  </div>
+</body>
+</html>
