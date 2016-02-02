@@ -49,10 +49,11 @@ class Star {
 
 int bgcolor = 0;
 Star[] stars;
-int count = 2500;
 int depth = 5000;
 int step = 20;
-int fps = 30;
+
+int count = 2000;
+int fps = 20;
 
 float min_radius = 0.2;
 float max_radius = 4;
@@ -71,8 +72,6 @@ void setup() {
     display_height = screen.height;
   }
   
-  fps = 30;
-
 	size(display_width, display_height, P3D);
 	smooth();
 	frameRate(fps);
