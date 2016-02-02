@@ -73,8 +73,11 @@ void setup() {
     display_width = window.urlParams.width;
     display_height = window.urlParams.height;
     console.log(window.urlParams);
-    count = window.urlParams.density * 2;
-    console.log("set count to " + count);
+
+    if ( typeof(window.urlParams.density) !== "undefined" ) {
+      count = window.urlParams.density * 2;
+      console.log("set count to " + count);
+    }
   }
   else {
     display_width = screen.width;
