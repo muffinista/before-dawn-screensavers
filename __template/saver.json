@@ -2,5 +2,6 @@
   "name":"My Awesome Screensaver",
   "description": "a description of my terrific screensaver",
   "aboutUrl": "http://mywebsite.com/about",
-  "author": "my name/etc"
+  "author": "my name/etc",
+  "source": "index.html"
 }
