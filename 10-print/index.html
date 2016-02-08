@@ -83,10 +83,13 @@
 
    // main loop
    var tick = function() {
+     // don't run if we aren't visible
+     if ( document.hidden ) {
+       return;
+     }
      var c = Math.random() >= 0.5 ? chars[0] : chars[1];
-     var oldHeight = s.clientHeight;
-     var string = s.innerHTML;
-     string += c;
+     var string = s.innerHTML + c;
+
      if ( string.length > fullScreenChars ) {
        string = string.substr(lineWidth);
      }
