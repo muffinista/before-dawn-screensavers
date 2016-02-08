@@ -115,6 +115,8 @@
    s.style.marginLeft = (widthDiff/2) + "px";
 
    // tick tick tick!
-   window.setInterval(tick, 10);
+   if ( ! document.hidden ) {
+     window.setInterval(tick, 40);
+   }
   </script>
 </html>
