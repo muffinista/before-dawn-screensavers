@@ -30,7 +30,8 @@
   
   <script>
    // / and \ from the font we are using
-   var chars = ["&#x0ee4d;", "&#x0ee4e;"];
+
+   var chars = ['\u{0EE4D}', '\u{0EE4E}'];
    
    var s = document.getElementsByTagName("div")[0];
    var b = document.getElementsByTagName("body")[0];
@@ -81,22 +82,6 @@
    
    var fullScreenChars = lineWidth * lineHeight;
 
-   // main loop
-   var tick = function() {
-     // don't run if we aren't visible
-     if ( document.hidden ) {
-       return;
-     }
-     var c = Math.random() >= 0.5 ? chars[0] : chars[1];
-     var string = s.innerHTML + c;
-
-     if ( string.length > fullScreenChars ) {
-       string = string.substr(lineWidth);
-     }
-     s.innerHTML = string;
-   };
-
-
    // figure out the expected height of our output, and force the div
    // (with background color) to be that size
    var charSize = charHeight();
@@ -114,9 +99,26 @@
    var widthDiff = b.clientWidth - s.clientWidth;
    s.style.marginLeft = (widthDiff/2) + "px";
 
+   // main loop
+   var tick = function() {
+     // don't run if we aren't visible
+     if ( document.hidden ) {
+       return;
+     }
+
+     var c = Math.random() >= 0.5 ? chars[0] : chars[1];
+     var string = s.innerHTML + c;
+     var len = s.innerHTML.length + 1;
+
+     if ( len % lineWidth == 0 && len > fullScreenChars  ) {
+       string = string.substr(lineWidth);
+     }
+     s.innerHTML = string;
+   };
+   
    // tick tick tick!
    if ( ! document.hidden ) {
-     window.setInterval(tick, 40);
+     window.setInterval(tick, 50);
    }
   </script>
 </html>
