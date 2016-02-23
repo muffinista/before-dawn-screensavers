@@ -42,5 +42,8 @@ function draw() {
     var pix = img.get(x, y);
 
     fill(pix, 128);
-    ellipse(x, y, pointillize, pointillize);
+    ellipse(
+        map(x, 0, img.width, 0, width),
+        map(y, 0, img.height, 0, height),
+        pointillize, pointillize);
 }
