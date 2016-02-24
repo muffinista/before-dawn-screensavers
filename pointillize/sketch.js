@@ -1,5 +1,12 @@
 var img;
 var smallPoint, largePoint;
+var pg;
+
+var pointillize, x, y, pix;
+
+var pointsPerFrame = 3;
+var maxFrames = 10000;
+
 
 function preload() {
     var url = unescape(decodeURIComponent(window.urlParams.screenshot));
@@ -19,31 +26,45 @@ function setup() {
         display_height = screen.height;
     }
 
+    frameRate(5);
+
     createCanvas(display_width, display_height);
+
+    pg = createGraphics(display_width, display_height);
 
     smallPoint = 4;
     largePoint = 20;
 
-    imageMode(CENTER);
-    noStroke();
-    background(0);
+    //imageMode(CENTER);
+    pg.noStroke();
+    pg.background(0);
 
     img.loadPixels();
 }
 
 function draw() {
+    if ( frameCount % maxFrames == 0 ) {
+        pg.background(0);
+    }
+
     // original script was interactive and used the mouse position.
-    //    let's try it with a random value instead
+    // let's try it with a random value instead
     //  var pointillize = map(mouseX, 0, width, smallPoint, largePoint);
-    var pointillize = random(smallPoint, largePoint);
+    for ( var i = 0 ; i < pointsPerFrame; i++ ) {
+        pointillize = random(smallPoint, largePoint);
 
-    var x = floor(random(img.width));
-    var y = floor(random(img.height));
-    var pix = img.get(x, y);
+        //x = floor(random(img.width));
+        //y = floor(random(img.height));
 
-    fill(pix, 128);
-    ellipse(
-        map(x, 0, img.width, 0, width),
-        map(y, 0, img.height, 0, height),
-        pointillize, pointillize);
+        x = random(img.width);
+        y = random(img.height);
+
+        pix = img.get(x, y);
+
+        pg.fill(pix, 128);
+        pg.ellipse(x, y, pointillize, pointillize);
+    }
+
+    background(0);
+    image(pg, 0, 0);
 }
