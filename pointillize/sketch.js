@@ -1,11 +1,14 @@
 var img;
-var smallPoint, largePoint;
 var pg;
+
+var smallPoint = 2;
+var largePoint = 10;
+
 
 var pointillize, x, y, pix;
 
 var pointsPerFrame = 3;
-var maxFrames = 10000;
+var maxFrames = 100000;
 
 
 function preload() {
@@ -26,16 +29,12 @@ function setup() {
         display_height = screen.height;
     }
 
-    frameRate(5);
+    frameRate(60);
 
     createCanvas(display_width, display_height);
 
     pg = createGraphics(display_width, display_height);
 
-    smallPoint = 4;
-    largePoint = 20;
-
-    //imageMode(CENTER);
     pg.noStroke();
     pg.background(0);
 
@@ -43,6 +42,7 @@ function setup() {
 }
 
 function draw() {
+    // blank the screen and restart after awhile
     if ( frameCount % maxFrames == 0 ) {
         pg.background(0);
     }
@@ -53,13 +53,15 @@ function draw() {
     for ( var i = 0 ; i < pointsPerFrame; i++ ) {
         pointillize = random(smallPoint, largePoint);
 
-        //x = floor(random(img.width));
-        //y = floor(random(img.height));
+        x = floor(random(img.width));
+        y = floor(random(img.height));
 
-        x = random(img.width);
-        y = random(img.height);
+        var pt = floor((y * img.width) + x);
 
-        pix = img.get(x, y);
+        pix = color(
+            img.pixels[pt],
+            img.pixels[pt+1],
+            img.pixels[pt+2]);
 
         pg.fill(pix, 128);
         pg.ellipse(x, y, pointillize, pointillize);
