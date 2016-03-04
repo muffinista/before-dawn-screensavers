@@ -20,6 +20,10 @@ int bgcolor = 0;
 int min_r; // = int((height * 2) * min_radius);
 int max_r; // = int(height * max_radius);
 
+int min_sprite = 1;
+int max_sprite = 1661;
+
+
 class Star {
  PVector _p;
  int sprite;
@@ -64,9 +68,6 @@ class Star {
     return (_p.z <= 10);
   }
 };
-
-int min_sprite = 1;
-int max_sprite = 872;
 
 void setup() {
   if ( typeof(window.urlParams) !== "undefined" ) {
