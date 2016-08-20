@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style type="text/css">
+     @font-face {
+	     font-family: "C64 Pro Mono Local";
+	     src: url("C64_Pro_Mono-STYLE.ttf") format("truetype");
+     }
+     body {
+       overflow: hidden;
+       background-color: #a5a5ff;
+       margin: 0;
+     }
+     div {
+	     font: normal 24pt/32px "C64 Pro Mono Local", verdana, helvetica, sans-serif;
+       background-color: #4242e7;
+       color: #a5a5ff;
+	     letter-spacing: 0px;
+	     padding: 0;
+	     margin: 0;
+       word-wrap: break-word;
+     }
+    </style>
+  </head>
+  <body>
+    <div>
+      
+    </div>
+  </body>
+  
+  <script>
+   // / and \ from the font we are using
+
+   var chars = ['\u{0EE4D}', '\u{0EE4E}'];
+   
+   var s = document.getElementsByTagName("div")[0];
+   var b = document.getElementsByTagName("body")[0];
+
+   var CHARACTER_PADDING = 2;
+   
+   // figure out how many characters wide the output will be
+   var getLineWidth = function() {
+     s.innerHTML = chars[0];
+     
+     var startHeight = s.clientHeight;
+     var width = 1;
+     while ( startHeight == s.clientHeight ) {
+       s.innerHTML = s.innerHTML + chars[0];
+       width = width + 1;
+     }
+
+     // reset!
+     s.innerHTML = "";
+
+     return width - CHARACTER_PADDING;
+    }
+   
+
+   // figure out the dimensions of a character
+   var charHeight = function() {
+     s.innerHTML = chars[0];
+     var _charHeight = s.clientHeight;
+     s.innerHTML = "";
+     return _charHeight;
+   };
+
+   // figure out how many lines tall our output will be
+   var getLineHeight = function() {
+     s.innerHTML = chars[0];
+     var charHeight = s.clientHeight;
+     s.innerHTML = "";
+
+     console.log("body height:", window.innerHeight, "line height:", charHeight);
+     return window.innerHeight/charHeight;
+   };
+    
+   var lineWidth = getLineWidth();
+   console.log("lineWidth", lineWidth);
+
+   var lineHeight = getLineHeight();
+   console.log("lineHeight", lineHeight);
+   
+   var fullScreenChars = lineWidth * lineHeight;
+
+   // figure out the expected height of our output, and force the div
+   // (with background color) to be that size
+   var charSize = charHeight();
+   console.log("charHeight", charSize);
+
+   var minHeight = charSize * lineHeight;
+   console.log("set minHeight to:", minHeight);
+   s.style.minHeight = minHeight + "px";
+
+   // also fix the width
+   var fixedWidth = parseInt(lineWidth, 10) * charSize;
+   s.style.width = fixedWidth + "px";
+
+   // center the div in the body
+   var widthDiff = b.clientWidth - s.clientWidth;
+   s.style.marginLeft = (widthDiff/2) + "px";
+
+   // main loop
+   var tick = function() {
+     // don't run if we aren't visible
+     if ( document.hidden ) {
+       return;
+     }
+
+     var c = Math.random() >= 0.5 ? chars[0] : chars[1];
+     var string = s.innerHTML + c;
+     var len = s.innerHTML.length + 1;
+
+     if ( len % lineWidth == 0 && len > fullScreenChars  ) {
+       string = string.substr(lineWidth);
+     }
+     s.innerHTML = string;
+   };
+   
+   // tick tick tick!
+   if ( ! document.hidden ) {
+     window.setInterval(tick, 50);
+   }
+  </script>
+</html>

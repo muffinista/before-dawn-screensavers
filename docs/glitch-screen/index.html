@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Screen Glitch</title>
+    <script src="glitch-canvas.min.js"></script>
+    <script>
+     // this little javascript snippet will parse any incoming URL
+     // parameters and place them in the window.urlParams object
+     window.urlParams = window.location.search.split(/[?&]/).slice(1).map(function(paramPair) {
+       return paramPair.split(/=(.+)?/).slice(0, 2);
+     }).reduce(function (obj, pairArray) {            
+       obj[pairArray[0]] = pairArray[1];
+       return obj;
+     }, {});
+    </script>
+    <style>
+     * {
+       padding: 0;
+       margin: 0;
+     }
+     #source {
+       display: none
+     }
+    </style>
+  </head>
+  <body>
+    <img id="source" />
+    <canvas id="screen" />
+  </body>
+
+  <script>
+   var img = document.getElementById("source");
+   var canvas = document.getElementById("screen");
+   var url = unescape(decodeURIComponent(window.urlParams.screenshot));
+
+   var ctx = canvas.getContext('2d');
+   
+   if ( typeof(window.urlParams.width) !== "undefined" ) {
+     canvas.width = window.urlParams.width;
+     canvas.height = window.urlParams.height;
+   }
+
+   var do_some_glitching = function() {
+     var screen = canvas.getContext('2d');
+     var my_image_data;
+     var parameters;
+
+     // draw the image on the canvas
+     ctx.drawImage(img, 0, 0);
+
+     my_image_data = ctx.getImageData( 0, 0, canvas.clientWidth, canvas.clientHeight );
+     parameters = {
+       amount: getRandomInt(0, 99),
+       seed: getRandomInt(0, 99),
+       iterations: getRandomInt(2, 25),
+       quality: getRandomInt(0, 99)
+     };
+
+     console.log(parameters);
+
+     glitch(my_image_data, parameters, function(image_data) {
+       ctx.putImageData(image_data, 0, 0);
+     });
+   }
+
+   function getRandomInt(min, max) {
+     return Math.floor(Math.random() * (max - min)) + min;
+   }
+
+   img.onload = do_some_glitching;
+   img.src = url;
+
+   // reload every couple minutes
+   setInterval(do_some_glitching, 1000 * 60 * 2);
+   
+  </script>
+</html>

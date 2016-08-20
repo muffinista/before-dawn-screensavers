@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style type="text/css">
+      #content {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        overflow: auto;
+      }
+    </style>
+    <script>
+     var urlParams = window.location.search.split(/[?&]/).slice(1).map(function(paramPair) {
+       return paramPair.split(/=(.+)?/).slice(0, 2);
+     }).reduce(function (obj, pairArray) {            
+       obj[pairArray[0]] = pairArray[1];
+       return obj;
+     }, {});
+
+     window.addEventListener("load", function load(event){
+       var dest = unescape(urlParams.load_url);
+       var webview = document.getElementById("content");
+       console.log("let's go to " + dest);
+       webview.src = dest;
+     });
+    </script>
+  </head>
+  <body>
+    <webview id="content" src="data:text/plain,Hello, world!"></webview>
+  </body>
+</html>

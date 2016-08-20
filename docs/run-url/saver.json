@@ -1,0 +1,14 @@
+{
+  "name":"Run a URL",
+  "source": "index.html",
+  "previewUrl": "preview.html",
+  "description": "Load the specified URL",
+  "aboutUrl": "http://muffinlabs.com/",
+  "options":[
+    {
+      "name": "load_url",
+      "type": "text",
+      "description": "url?"
+    }
+  ]
+}

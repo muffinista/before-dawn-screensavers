@@ -1,0 +1,16 @@
+{
+  "name":"Emoji Starfield",
+  "source": "index.html",
+  "description": "Emoji flying through space. Emojis from the twemoji project",
+  "aboutUrl": "http://muffinlabs.com/",
+  "options":[
+    {
+      "name": "density",
+      "type": "slider",
+      "description": "how dense?",
+      "min": "1",
+      "max": "100",
+      "default": "75"
+    }
+  ]
+}
