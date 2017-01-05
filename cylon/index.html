@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Cylon</title>
+    <!-- based on the code here: https://developer.mozilla.org/en-US/docs/Web/CSS/animation#Cylon_Eye -->
+    <style>
+     body {
+       height: 100%;
+       background-color: black;
+     }
+
+     .main {
+       background-color: black;
+       height: 100vh;
+       width: 100%;
+       overflow: hidden;
+     }
+
+     .cylon_eye {
+       background-color: red;
+       background-image: -webkit-linear-gradient(    left, rgba( 0,0,0,0.9 ) 25%, rgba( 0,0,0,0.1 ) 50%, rgba( 0,0,0,0.9 ) 75%);
+       background-image:    -moz-linear-gradient(    left, rgba( 0,0,0,0.9 ) 25%, rgba( 0,0,0,0.1 ) 50%, rgba( 0,0,0,0.9 ) 75%);
+       background-image:      -o-linear-gradient(    left, rgba( 0,0,0,0.9 ) 25%, rgba( 0,0,0,0.1 ) 50%, rgba( 0,0,0,0.9 ) 75%);
+       background-image:         linear-gradient(to right, rgba( 0,0,0,0.9 ) 25%, rgba( 0,0,0,0.1 ) 50%, rgba( 0,0,0,0.9 ) 75%);
+       color: white;
+       margin-top: 5vh;
+       height: 90vh;
+       width: 20%;
+
+       -webkit-animation: 3s linear 0s infinite alternate move_eye;
+       -moz-animation: 3s linear 0s infinite alternate move_eye;
+       -o-animation: 3s linear 0s infinite alternate move_eye;
+       animation: 3s linear 0s infinite alternate move_eye;
+     }
+
+     @-webkit-keyframes move_eye { from { margin-left:-20%; } to { margin-left:100%; }  }
+     @-moz-keyframes move_eye { from { margin-left:-20%; } to { margin-left:100%; }  }
+     @-o-keyframes move_eye { from { margin-left:-20%; } to { margin-left:100%; }  }
+     @keyframes move_eye { from { margin-left:-20%; } to { margin-left:100%; }  }
+    </style>
+  </head>
+
+  <div class="main">
+    <div class="cylon_eye"></div>
+  </div>
+</html>
