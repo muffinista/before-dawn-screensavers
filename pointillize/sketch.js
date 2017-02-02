@@ -29,6 +29,10 @@ function setup() {
         display_height = screen.height;
     }
 
+    // note -- if you don't do this, width/height will be strings!
+    display_width = parseInt(display_width, 10);
+    display_height = parseInt(display_height, 10);
+
     frameRate(60);
 
     createCanvas(display_width, display_height);
