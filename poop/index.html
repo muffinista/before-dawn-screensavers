@@ -3,9 +3,25 @@
   <head>
     <title>My Awesome Screensaver</title>
     <style>
+     body {
+       background-color: black;
+     }
      * {
        padding: 0;
        margin: 0;
+     }
+     #background {
+       position: absolute;
+       top: 0;
+       left: 0;
+       width: 100%;
+       height: 100%;
+       opacity: 0.45;
+     }
+     #wrapper {
+       position: absolute;
+       top: 0;
+       left: 0;
      }
     </style>
     <script>
@@ -21,13 +37,13 @@
     </script>
   </head>
   <body>
-    <div id="wrapper">
-      
-    </div>
+    <div id="background"></div>
+    <div id="wrapper"></div>
   </body>
   <script>
    var url = unescape(decodeURIComponent(window.urlParams.screenshot));
-   document.querySelector("#wrapper").style.backgroundImage = 'url(' + url + ')';
+   document.querySelector("#background").style.backgroundImage = 'url(' + url + ')';
+
   </script>
 
   <script language="javascript" type="text/javascript" src="./p5.min.js"></script>
