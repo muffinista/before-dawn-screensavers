@@ -1,0 +1,9 @@
+{
+  "name": "Astronomy Photos",
+  "description": "Pulls random pics from NASA's Astronomy Photo of The Day",
+  "aboutUrl": "https://apod.nasa.gov/apod/astropix.html",
+  "author": "Colin Mitchell",
+  "source": "index.html",
+  "options": [],
+  "editable": true
+}

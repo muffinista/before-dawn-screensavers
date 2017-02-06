@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>APOD</title>
+    <style>
+     body {
+       background-color: black;
+     }
+     * {
+       padding: 0;
+       margin: 0;
+     }
+
+     div {
+       display: flex;
+       justify-content: center;
+       align-items: center;
+       width: 100vw;
+       height: 100vh;
+     }
+     img {
+       object-fit: contain;
+     }
+
+     footer {
+       position: fixed;
+       bottom: 0px;
+       height: 40px;
+       width: 100%;
+     }
+
+     h1 {
+       margin-left: 1.0em;
+       font-size: 1.2em;
+       float: left;
+       color: #dddddd;
+     }
+     h2 {
+       margin-right: 1.0em;
+       font-size: 1.2em;
+       float: right;
+       color: #dddddd;
+     }
+
+    </style>
+  </head>
+
+  <body>
+    <div>
+      <img id="screen" />
+    </div>
+    <footer>
+      <h1></h1>
+      <h2></h2>
+    </footer>
+    <script>
+
+     // this little javascript snippet will parse any incoming URL
+     // parameters and place them in the window.urlParams object
+     window.urlParams = window.location.search.split(/[?&]/).slice(1).map(function(paramPair) {
+       return paramPair.split(/=(.+)?/).slice(0, 2);
+     }).reduce(function (obj, pairArray) {            
+       obj[pairArray[0]] = pairArray[1];
+       return obj;
+     }, {});
+
+
+     // generate a random date. this idea is taken from the apod npm project
+     // at https://github.com/stewart/apod.js/blob/master/index.js
+     function randomDate() {
+       var start = new Date(1995, 5, 16),
+           end = new Date(),
+           current = start,
+           dates = [];
+
+       while (current < end) {
+         dates.push([
+           current.getFullYear(),
+           current.getMonth() + 1,
+           current.getDate()
+         ].join("-"));
+
+         current.setDate(current.getDate() + 1);
+       }
+
+       return dates[Math.floor(Math.random() * dates.length)];
+     }
+
+     function handleData () {
+       var data = JSON.parse(this.responseText);
+       var waitTime;
+       console.log(data);
+
+       if ( typeof(data.hdurl) === "undefined" ) {
+         waitTime = 100;
+       }
+       else {
+         var image_url = data.hdurl;
+         var img = document.getElementById("screen");
+         img.addEventListener('load', function() {
+           if ( img.width > img.height ) {
+             img.style.width = window.urlParams.width + "px";
+           }
+           else {
+             img.style.height = window.urlParams.height + "px";
+           }
+         }, false);
+
+         img.src = image_url;
+
+         var h1 = document.querySelector("h1");
+         var h2 = document.querySelector("h2");
+
+         h1.innerText = data.title;
+         h2.innterText = data.copyright;
+
+         waitTime = 60 * 1000 * 5;         
+       }
+
+       setTimeout(loadImage, waitTime);      
+     }
+
+     
+     var loadImage = function() {
+       var date = randomDate();
+       
+       var url = "https://api.nasa.gov/planetary/apod?hd=true&date=" + date + "&api_key=NNKOjkoul8n1CH18TWA9gwngW1s1SmjESPjNoUFo";
+
+       var req = new XMLHttpRequest();
+       req.addEventListener("load", handleData);
+       req.open("GET", url);
+       req.send();
+     };
+
+
+     loadImage();
+
+    </script>
+
+  </body>
+</html>
