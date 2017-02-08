@@ -1,19 +1,12 @@
 {
   "name": "before-dawn-screensavers",
   "version": "0.8.6",
-  "description": "A desktop screensaver app using web technologies",
-  "author": "Colin Mitchell",
-  "scripts": {
-    "postinstall": "install-app-deps",
-    "pack": "build --dir",
-    "dist": "build --x64"
-  },
+  "description": "A package of the screensavers for Before Dawn",
+  "author": "Colin Mitchell <colin@muffinlabs.com> (http://muffinlabs.com)",
   "devDependencies": {
     "grunt": "^1.0.1",
     "grunt-contrib-watch": "^1.0.0",
-    "lodash": "^4.17.4"
-  },
-  "dependencies": {
+    "lodash": "^4.17.4",
     "grunt-release": "^0.14.0"
   }
 }
