@@ -1,17 +1,36 @@
 module.exports = function(grunt) {
-  grunt.registerTask('rebuild', 'Update list of screensavers', function() {
-    const fs = require('fs')
-    const path = require('path')
-    const _ = require('lodash');
-    
-    const srcpath = ".";
-    
+  const fs = require('fs')
+  const path = require('path')
+  const _ = require('lodash');
+  const srcpath = ".";
+
+  var getFolders = function() {
     let folders = fs.readdirSync(srcpath).filter(file => fs.statSync(path.join(srcpath, file)).isDirectory());
     folders = _.reject(folders, f => f === ".git" || f.match(/^__/))
     folders = _.reject(folders, f => !fs.existsSync(path.join(srcpath, f, "saver.json")))
 
-    fs.writeFileSync("savers.json", JSON.stringify(folders));
-    
+    return folders;
+  };
+
+  grunt.registerTask('rebuild', 'Update list of screensavers', function() {   
+    fs.writeFileSync("savers.json", JSON.stringify(getFolders()));   
+  });
+
+  grunt.registerTask('preflight', 'Prepare screensavers for release', function() {
+    let folders = getFolders();
+    for (s of folders) {
+      let src = path.join(srcpath, s, "saver.json");
+      let data = JSON.parse(fs.readFileSync(src));
+
+      // remove key that we don't need for released screensavers
+      delete data.editable;
+
+      // pretty-format the json output
+      output = JSON.stringify(data, null, 2);
+      
+      console.log(src + " -> " + output);
+      fs.writeFileSync(src, output);
+    }
   });
 
   grunt.initConfig({
@@ -20,10 +39,16 @@ module.exports = function(grunt) {
         files: ['**/*.json'],
         tasks: ['rebuild']
       }
+    },
+    release: {
+      options: {
+        npm: false
+      }
     }
   });
   
   grunt.loadNpmTasks('load-grunt-tasks');
   grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-release');
   grunt.registerTask('default', ['rebuild']);
 };
