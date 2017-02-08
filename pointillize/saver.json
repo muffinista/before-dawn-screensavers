@@ -1,5 +1,5 @@
 {
-  "name":"Pointillize",
+  "name": "Pointillize",
   "description": "Generate a pointillized copy of your screen. Adapted from a p5.js example",
   "author": "Colin Mitchell",
   "source": "index.html",
