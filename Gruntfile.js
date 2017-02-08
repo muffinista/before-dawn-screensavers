@@ -42,6 +42,7 @@ module.exports = function(grunt) {
     },
     release: {
       options: {
+        beforeRelease: ['rebuild', 'preflight'],
         npm: false
       }
     }
