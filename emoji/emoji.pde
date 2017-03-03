@@ -1,4 +1,4 @@
-/* @pjs pauseOnBlur="true"; */ 
+/* @pjs pauseOnBlur="false"; */ 
 
 
 Star[] stars;
