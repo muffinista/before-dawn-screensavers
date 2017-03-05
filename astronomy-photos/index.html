@@ -86,7 +86,7 @@
        return dates[Math.floor(Math.random() * dates.length)];
      }
 
-     function handleData () {
+     function handleData() {
        var data = JSON.parse(this.responseText);
        var waitTime;
        console.log(data);
@@ -112,7 +112,7 @@
          var h2 = document.querySelector("h2");
 
          h1.innerText = data.title;
-         h2.innterText = data.copyright;
+         h2.innerText = data.copyright;
 
          waitTime = 60 * 1000 * 5;         
        }
