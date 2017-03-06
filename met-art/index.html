@@ -1,16 +1,65 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>My Awesome Screensaver</title>
+    <title>Met Art Images</title>
   </head>
+  <style>
+   * {
+     padding: 0;
+     margin: 0;
+   }
+
+   body {
+     overflow:hidden;
+     background-color: black;
+     display: flex;
+     flex-direction: row;
+     margin: 5.0em;
+   }
+   body.flipped {
+     flex-direction: row-reverse;
+   }
+
+   div.image {
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     width: 60vw;
+   }
+   img {
+     object-fit: contain;
+     max-width: 60vw;
+     max-height: 80vh;
+   }
+   div.data-wrapper {
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     width: 25vw;
+     max-height: 80vh;
+   }
+   div.data {
+     display: flex;
+     flex-direction: column;     
+   }
+
+   h1, h2 {
+     text-align: center;
+     margin-bottom: 2.0em;
+     font-size: 1.2em;
+     color: #dddddd;
+   }
+  </style>
   <body>
-    <div>
+    <div class="image">
       <img id="screen" />
     </div>
-    <footer>
-      <h1></h1>
-      <h2></h2>
-    </footer>
+    <div class="data-wrapper">
+      <div class="data">
+        <h1></h1>
+        <h2></h2>
+      </div>
+    </div>
   </body>
   <script>
    var waitTime = 60 * 1000 * 5;
@@ -22,8 +71,15 @@
 
      var title = rand.title;
      var description = rand.description;
-     var image = rand.image.replace(/mobile-large/, "web-large");
+     var image;
 
+     if ( rand.original ) {
+       image = rand.original;
+     }
+     else {
+       image = rand.image.replace(/mobile-large/, "web-large");
+     }
+     
      var img = document.getElementById("screen");
 
      img.src = image;

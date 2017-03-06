@@ -36,4 +36,23 @@ while @done == false
   index = index + 1
 end              
 
+@output = @output.collect { |row|
+  puts row.inspect
+  original = row["image"].gsub(/mobile-large/, "original");
+  begin
+    puts original
+    result = HTTParty.head(original)
+    if result.code == 200
+      row["original"] = original
+    else
+      row["original"] = nil
+    end
+  rescue
+    row["original"] = nil
+  end
+  
+  sleep 2
+  row
+}
+
 File.write("data.json", JSON.pretty_generate(@output))
