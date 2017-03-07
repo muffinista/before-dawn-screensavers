@@ -1,0 +1,9 @@
+{
+  "name": "Hubble",
+  "description": "Images from the Hubble Space Telescope. Content is CC-licensed by ESA/Hubble",
+  "aboutUrl": "https://www.spacetelescope.org/images/archive/top100/",
+  "author": "",
+  "source": "index.html",
+  "options": [],
+  "editable": true
+}

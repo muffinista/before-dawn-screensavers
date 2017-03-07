@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Hubble Telescope Images</title>
+    <style>
+     * {
+       padding: 0;
+       margin: 0;
+     }
+     body {
+       overflow:hidden;
+       background-color: black;
+     }
+     img {
+       min-width: 100vw;
+       min-height: 100vh;
+       object-fit: cover;
+     }
+     h1 {
+       margin-bottom: 0.2em;
+       margin-left: 0.2em;
+       font-size: 1.2em;
+       color: #dddddd;
+       position: fixed;
+       bottom: 0px;
+       padding: 0.1em;
+       background-color:rgba(0, 0, 0, 0.3);
+     }
+    </style>
+  </head>
+  <body>
+    <img id="screen" />
+    <h1></h1>
+
+    <script>
+     var waitTime = 60 * 1000 * 3;
+     var data = []
+     var dataIsLoaded = function() {
+       data = JSON.parse(this.responseText);
+       loadImage();
+     }
+     
+     var loadImage = function() {
+       var rand = data[Math.floor(Math.random() * data.length)];
+       console.log(rand);
+
+       var title = rand.title;
+       var url = rand.url;
+
+       var preloader = new Image();
+       preloader.onload = function() {
+         var img = document.getElementById("screen");
+         img.src = preloader.src;
+
+         var h1 = document.querySelector("h1");
+         h1.innerText = rand.title;
+       };
+       preloader.src = url;
+
+       
+       setTimeout(loadImage, waitTime);
+     };
+
+     var load = function() {
+       var url = "./data.json";
+
+       var req = new XMLHttpRequest();
+       req.addEventListener("load", dataIsLoaded);
+       req.open("GET", url);
+       req.send();
+     };
+
+     load();
+
+    </script>
+  </body>
+</html>
