@@ -89,9 +89,14 @@
      function handleData() {
        var data = JSON.parse(this.responseText);
        var waitTime;
+
        console.log(data);
 
-       if ( typeof(data.hdurl) === "undefined" ) {
+       // add a rate limit check
+       if ( typeof(data.error) !== "undefined" && data.error.code === "OVER_RATE_LIMIT" ) {
+         waitTime = 60 * 1000 * 5;
+       }
+       else if ( typeof(data.hdurl) === "undefined" ) {
          waitTime = 100;
        }
        else {
@@ -114,7 +119,7 @@
          h1.innerText = data.title;
          h2.innerText = data.copyright;
 
-         waitTime = 60 * 1000 * 5;         
+         waitTime = 60 * 1000 * 5;
        }
 
        setTimeout(loadImage, waitTime);
