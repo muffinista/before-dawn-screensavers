@@ -11,7 +11,10 @@
        background-color: #a5a5ff;
        margin: 0;
      }
-     div {
+     #wrapper {
+
+     }
+     #guts {
 	     font: normal 24pt/32px "C64 Pro Mono Local", verdana, helvetica, sans-serif;
        background-color: #4242e7;
        color: #a5a5ff;
@@ -23,81 +26,97 @@
     </style>
   </head>
   <body>
-    <div>
+    <div id="wrapper">
+      <div id="guts">
       
+      </div>
     </div>
   </body>
   
   <script>
-   // / and \ from the font we are using
+   var CHARACTER_PADDING = 2;
+   var tmpParams = new URLSearchParams(document.location.search);
+   window.urlParams = {};
+   for(let k of tmpParams.keys() ) {
+     window.urlParams[k] = tmpParams.get(k);
+   }
 
+   var maxWidth = window.urlParams.width;
+   
+   // / and \ from the font we are using
    var chars = ['\u{0EE4D}', '\u{0EE4E}'];
    
-   var s = document.getElementsByTagName("div")[0];
-   var b = document.getElementsByTagName("body")[0];
+   var guts = document.querySelector("#guts")
+   var wrapper = document.querySelector("#wrapper");
 
-   var CHARACTER_PADDING = 2;
+   wrapper.style.width = window.urlParams.width + "px";
+   wrapper.style.height = window.urlParams.height + "px";
    
    // figure out how many characters wide the output will be
-   var getLineWidth = function() {
-     s.innerHTML = chars[0];
+/*   var getLineWidth = function() {
+     guts.innerHTML = chars[0];
      
-     var startHeight = s.clientHeight;
-     var width = 1;
-     while ( startHeight == s.clientHeight ) {
-       s.innerHTML = s.innerHTML + chars[0];
+     var startHeight = guts.clientHeight;
+     var width = 0;
+     while ( startHeight == guts.clientHeight && guts.clientWidth <= maxWidth ) {
        width = width + 1;
+       guts.innerHTML = guts.innerHTML + chars[0];
      }
 
      // reset!
-     s.innerHTML = "";
+     guts.innerHTML = "";
 
-     return width - CHARACTER_PADDING;
-    }
-   
+     return parseInt(width - CHARACTER_PADDING, 10);
+   };
+  */ 
 
    // figure out the dimensions of a character
    var charHeight = function() {
-     s.innerHTML = chars[0];
-     var _charHeight = s.clientHeight;
-     s.innerHTML = "";
+     guts.innerHTML = chars[0];
+     var _charHeight = guts.clientHeight;
+     guts.innerHTML = "";
      return _charHeight;
    };
 
    // figure out how many lines tall our output will be
    var getLineHeight = function() {
-     s.innerHTML = chars[0];
-     var charHeight = s.clientHeight;
-     s.innerHTML = "";
+     guts.innerHTML = chars[0];
+     var charHeight = guts.clientHeight;
+     guts.innerHTML = "";
 
-     console.log("body height:", window.innerHeight, "line height:", charHeight);
-     return window.innerHeight/charHeight;
+     //console.log("body height:", window.innerHeight, "line height:", charHeight);
+     //return window.innerHeight/charHeight;
+     return window.urlParams.height/charHeight;
    };
     
-   var lineWidth = getLineWidth();
-   console.log("lineWidth", lineWidth);
-
-   var lineHeight = getLineHeight();
-   console.log("lineHeight", lineHeight);
-   
-   var fullScreenChars = lineWidth * lineHeight;
-
    // figure out the expected height of our output, and force the div
    // (with background color) to be that size
    var charSize = charHeight();
    console.log("charHeight", charSize);
 
+   var lineHeight = getLineHeight();
+   var lineWidth = parseInt((maxWidth / charSize) - CHARACTER_PADDING, 10);
+
+   //   var lineWidth = getLineWidth();
+   
    var minHeight = charSize * lineHeight;
    console.log("set minHeight to:", minHeight);
-   s.style.minHeight = minHeight + "px";
+   guts.style.minHeight = minHeight + "px";
+
+   console.log("lineWidth", lineWidth);
+   console.log("lineHeight", lineHeight);
+   
+   var fullScreenChars = lineWidth * lineHeight;
 
    // also fix the width
-   var fixedWidth = parseInt(lineWidth, 10) * charSize;
-   s.style.width = fixedWidth + "px";
+   var fixedWidth = lineWidth * charSize;
+   guts.style.width = fixedWidth + "px";
 
    // center the div in the body
-   var widthDiff = b.clientWidth - s.clientWidth;
-   s.style.marginLeft = (widthDiff/2) + "px";
+   console.log("wrapper " + wrapper.clientWidth);
+   console.log("guts " + guts.clientWidth);
+   var widthDiff = wrapper.clientWidth - guts.clientWidth;
+   guts.style.marginLeft = (widthDiff/2) + "px";
 
    // main loop
    var tick = function() {
@@ -107,18 +126,15 @@
      }
 
      var c = Math.random() >= 0.5 ? chars[0] : chars[1];
-     var string = s.innerHTML + c;
-     var len = s.innerHTML.length + 1;
+     var string = guts.innerHTML + c;
+     var len = guts.innerHTML.length + 1;
 
      if ( len % lineWidth == 0 && len > fullScreenChars  ) {
        string = string.substr(lineWidth);
      }
-     s.innerHTML = string;
+     guts.innerHTML = string;
    };
-   
-   // tick tick tick!
-   if ( ! document.hidden ) {
-     window.setInterval(tick, 50);
-   }
+
+   window.setInterval(tick, 50);
   </script>
 </html>
