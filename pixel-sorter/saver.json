@@ -1,8 +1,8 @@
 {
-  "name": "Pixel Sorter",
-  "description": "Sort the pixels on your screen",
+  "name": "Defragment",
+  "description": "Defragment your screen!",
   "aboutUrl": "",
-  "author": "",
+  "author": "Colin Mitchell",
   "source": "index.html",
   "options": [],
   "editable": true
