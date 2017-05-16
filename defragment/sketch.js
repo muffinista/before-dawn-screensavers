@@ -11,22 +11,36 @@ for(let k of tmpParams.keys() ) {
 
 var r, g, b;
 
-var block_width_count = 80;
-var block_height_count = 80;
+var block_width_count;
+var block_height_count;
 
-var block_width = Math.round(window.urlParams.width / block_width_count);
-var block_height = Math.round(window.urlParams.height / block_height_count);
+var block_width;
+var block_height;
 
 var last_x = 0;
 var last_y = 0;
 
 var img;
-var tweenCount = 1;
-var tween_rate = 750;
+var tweenCount = 3;
+var tween_rate = 250;
 
 function preload() {
   var imgUrl = unescape(decodeURIComponent(window.urlParams.screenshot));
   img = loadImage(imgUrl);
+}
+
+function getFactors(integer){
+  var factors = [],
+      quotient = 0;
+
+  for(var i = 1; i <= integer; i++){
+    quotient = integer/i;
+
+    if(quotient === Math.floor(quotient)){
+      factors.push(i); 
+    }
+  }
+  return factors;
 }
 
 function setup() {
@@ -48,20 +62,36 @@ function setup() {
   display_width = parseInt(display_width, 10);
   display_height = parseInt(display_height, 10);
 
+  var widths = getFactors(display_width);
+  var heights = getFactors(display_height);
+
+//  block_width_count = widths[Math.floor(widths.length/2)];
+//  block_height_count = heights[Math.floor(heights.length/2)];
+
+  block_width_count = random(widths);
+  block_height_count = random(heights);
+
+  block_width = (display_width / block_width_count);
+  block_height = (display_height / block_height_count);
+
   // place sketch on screen
   var c = createCanvas(display_width, display_height);
   c.parent("wrapper");
 
-  // draw background
-  image(img, 0, 0);
-  loadPixels();
   frameRate(15);
-
+  noStroke();
+  
   // start animations!
   for ( var i = 0; i < tweenCount; i++ ) {
     nextTween();
   }
 
+}
+
+function getRandomInt(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min)) + min;
 }
 
 function avg(i) {
@@ -71,65 +101,98 @@ function avg(i) {
   for ( var j = 0; j < i.pixels.length; j++ ) {
     sum += i.pixels[j];
   }
+  i.updatePixels();
 
   return sum / i.pixels.length;
 }
 
 function getBlock(bx, by) {
-  var x = Math.round(block_width * bx);
-  var y = Math.round(block_height * by);
-  return get(x, y, block_width, block_height);
+  var x = block_width * bx;
+  var y = block_height * by;
+
+  return img.get(x, y, block_width, block_height);
 }
 
 function nextTween() {
   var tween;
 
-  var x2 = random(0, block_width_count - 1);  
-  var y2 = random(0, block_height_count - 1);  
+  var x = getRandomInt(0, block_width_count);
+  var y = getRandomInt(0, block_height_count);
 
   if ( last_x >= block_width_count ) {
     last_x = 0;
     last_y = last_y + 1;
 
-    if ( last_y > block_height_count ) {
+    if ( last_y >= block_height_count ) {
       last_y = 0;
     }
   }
   
   var b1 = getBlock(last_x, last_y);
-  var b2 = getBlock(x2, y2);  
+  var b2 = getBlock(x, y);  
 
-  tween = new TWEEN.Tween({alpha:255});
-  tween.to({alpha: 0}, tween_rate)
+  var start = {
+    alpha: 255,
+    x1: last_x * block_width,
+    y1: last_y * block_height,
+    x2: x * block_width,
+    y2: y * block_height,
+    b1: b1,
+    b2: b2,
+  };
+
+  var flip = avg(b1) > avg(b2);
+  
+  
+  if ( flip ) {
+    img.copy(b1,
+             0, 0,
+             block_width, block_height,
+             start.x2, start.y2,
+             block_width, block_height);
+    img.copy(b2,
+             0, 0,
+             block_width, block_height,
+             start.x1, start.y1,
+             block_width, block_height);
+  }
+  else {
+    img.copy(b2,
+             0, 0,
+             block_width, block_height,
+             start.x2, start.y2,
+             block_width, block_height);
+    img.copy(b1,
+             0, 0,
+             block_width, block_height,
+             start.x1, start.y1,
+             block_width, block_height);
+  }
+  
+  var end = {
+    alpha: 0
+  };
+  
+  
+  tween = new TWEEN.Tween(start);
+  tween.to(end, tween_rate)
        .onUpdate(function() {
-         if ( avg(b1) > avg(b2) ) {
-           image(b1, x2 * block_width, y2 * block_height);
-           fill(r, g, b, this.alpha);
-           rect(x2 * block_width, y2 * block_height, block_width, block_height);
+         fill(r, g, b, this.alpha);
 
-           image(b2, last_x * block_width, last_y * block_height);
-           fill(r, g, b, this.alpha);
-           rect(last_x * block_width, last_y * block_height, block_width, block_height);
-         }
-         else {
-           image(b2, x2 * block_width, y2 * block_height);
-           fill(r, g, b, this.alpha);
-           rect(x2 * block_width, y2 * block_height, block_width, block_height);
+         rect(this.x2, this.y2, block_width, block_height);
+         rect(this.x1, this.y1, block_width, block_height);
 
-           image(b1, last_x * block_width, last_y * block_height);
-           fill(r, g, b, this.alpha);
-           rect(last_x * block_width, last_y * block_height, block_width, block_height);
-          
-         }
        })
        .onComplete(function() {
-         last_x = last_x + 1;
-         nextTween();
+         setTimeout(nextTween, 1);
        });
   tween.start();
+
+  last_x = last_x + 1;
 }
 
 function draw() {
+  image(img, 0, 0);
   TWEEN.update();
 }
  
