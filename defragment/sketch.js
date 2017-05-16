@@ -65,9 +65,8 @@ function setup() {
   var widths = getFactors(display_width);
   var heights = getFactors(display_height);
 
-//  block_width_count = widths[Math.floor(widths.length/2)];
-//  block_height_count = heights[Math.floor(heights.length/2)];
-
+  // pick random block counts from the collection of widths/heights
+  // this ensures that the math is always dividing evenly
   block_width_count = random(widths);
   block_height_count = random(heights);
 
@@ -96,14 +95,20 @@ function getRandomInt(min, max) {
 
 function avg(i) {
   var sum = 0;
-
+  var count = 0;
+  
   i.loadPixels();
   for ( var j = 0; j < i.pixels.length; j++ ) {
-    sum += i.pixels[j];
+    // every four elements in the array is RGBA
+    // let's skip the alpha value
+    if ( j % 4 !== 0 ) {
+      count = count + 1;
+      sum += i.pixels[j];
+    }
   }
   i.updatePixels();
 
-  return sum / i.pixels.length;
+  return sum / count;
 }
 
 function getBlock(bx, by) {
