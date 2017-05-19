@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <style>
+     * {
+       padding: 0;
+       margin: 0;
+     }
+
+     body {
+       overflow:hidden;
+       background-color: black;
+       display: flex;
+       flex-direction: row;
+       margin: 5.0em;
+       justify-content: center;
+     }
+
+     h1 {
+       font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+       font-size: 350%;
+       font-weight: 700;
+       color: #eeeeee;
+       min-width: 80%;
+       animation: fadein 2s;
+     }
+
+     @keyframes fadein {
+       from { opacity: 0; }
+       to   { opacity: 1; }
+     }
+    </style>
+  </head>
+  <body>
+    <h1></h1>
+    <script>
+     var waitTime = 15 * 1000;
+     var data = [];
+
+     var dataIsLoaded = function() {
+       data = this.responseText.match(/[^\r\n]+/g);
+       loadText();
+     }
+     
+     var loadText = function() {
+       var rand = data[Math.floor(Math.random() * data.length)];
+
+       var el = document.querySelector("h1");
+       el.innerHTML = rand;
+
+       var newEl = el.cloneNode(true);
+       
+       el.parentNode.replaceChild(newEl, el);
+
+       var h = newEl.offsetHeight;
+
+       // add some margin to the element to move it on the screen a bit
+       var range = (screen.availHeight - h) * 0.8;
+
+       newEl.style.marginTop = (Math.random() * range) + "px";
+
+       var w = newEl.offsetWidth;
+       range = (screen.availWidth - w) * 0.8;
+       newEl.style.marginLeft = (Math.random() * range) + "px";
+       
+       setTimeout(loadText, waitTime);
+     };
+
+
+     var load = function() {
+       var url = "./truisms.txt";
+
+       var req = new XMLHttpRequest();
+       req.addEventListener("load", dataIsLoaded);
+       req.open("GET", url);
+       req.send();
+     };
+
+     load();
+    </script>
+  </body>
+</html>
