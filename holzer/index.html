@@ -13,7 +13,7 @@
        background-color: black;
        display: flex;
        flex-direction: row;
-       margin: 5.0em;
+       margin: 0;
        justify-content: center;
      }
 
@@ -22,8 +22,8 @@
        font-size: 350%;
        font-weight: 700;
        color: #eeeeee;
-       min-width: 80%;
-       animation: fadein 2s;
+       max-width: 80%;
+       animation: fadein 3s;
      }
 
      @keyframes fadein {
@@ -33,8 +33,12 @@
     </style>
   </head>
   <body>
-    <h1></h1>
+    <div>
+      <h1></h1>
+    </div>
+
     <script>
+     // reload every 15 seconds
      var waitTime = 15 * 1000;
      var data = [];
 
@@ -56,12 +60,12 @@
        var h = newEl.offsetHeight;
 
        // add some margin to the element to move it on the screen a bit
-       var range = (screen.availHeight - h) * 0.8;
+       var range = (screen.availHeight - h) * 0.7;
 
        newEl.style.marginTop = (Math.random() * range) + "px";
 
        var w = newEl.offsetWidth;
-       range = (screen.availWidth - w) * 0.8;
+       range = (screen.availWidth - w) * 0.7;
        newEl.style.marginLeft = (Math.random() * range) + "px";
        
        setTimeout(loadText, waitTime);
