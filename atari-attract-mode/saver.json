@@ -1,0 +1,9 @@
+{
+  "name": "Atari Attract Mode",
+  "description": "Modern version of old Atari Attract Mode",
+  "aboutUrl": "",
+  "author": "Colin Mitchell",
+  "source": "index.html",
+  "options": [],
+  "editable": true
+}
