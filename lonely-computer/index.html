@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Lonely Computer</title>
+    <style>
+     * {
+       box-sizing: border-box;
+       padding: 0;
+       margin: 0;
+     }
+
+     #container {
+       position: absolute;
+       text-align: center;
+     }
+
+     path {
+       stroke-width: 6;
+       stroke: #1E1935;
+       stroke-linecap: round;
+       fill: none;
+     }
+
+     #nose {
+       stroke-width: 4;
+     }
+
+     circle {
+       stroke-width: 2;
+       fill: #fff;
+     }
+
+     .brow {
+       stroke-width: 3;
+     }
+
+     .eye {
+       stroke: #000;
+     }
+
+     .pupil {
+       fill: #000;
+       stroke: #000;
+     }
+
+     #face {
+       stroke: #000;
+     }
+    </style>
+
+    <script>
+     // load any incoming URL parameters. you could just use the
+     // URLSearchParams object directly to manage these variables, but
+     // having them in a hash is a little easier sometimes.
+     var tmpParams = new URLSearchParams(document.location.search);
+     window.urlParams = {};
+     
+     for(let k of tmpParams.keys() ) {
+       window.urlParams[k] = tmpParams.get(k);
+     }
+    </script>
+  </head>
+  <body>
+    <div id="container" type="image/svg+xml">
+      <svg id="svg"
+           xmlns="http://www.w3.org/2000/svg"
+           viewBox="0 0 499 499"
+           width="500" height="500" preserveAspectRatio="xMidYMid meet">
+	      <g id="main">
+          <defs>
+            <g id="eye">
+		          <circle class="eye" cx="0" cy="85" r="30" />
+              <!-- pupils juuuust a bit lower than eye -->
+		          <circle class="pupil" id="pupil" cx="0" cy="90" r="10" />
+
+              <!-- flatten brow as grumpiness increases -->
+              <path class="brow" id="brow" d="M-30,25 C-30,45 30,45 30,25" />
+            </g>
+          </defs>
+
+          <circle id="face" cx="250" cy="250" r="240" />
+          
+          <g id="eyes">
+            <use xlink:href="#eye" id="left-eye" x="120" y="75" />
+            <use xlink:href="#eye" id="right-eye" x="380" y="75" />
+          </g>
+
+		      <path id="nose" d="M220,190 C210,230 290,230, 280,190" />
+		      <path id="smile" d="M70,390 C80,280 420,280 430,390"/>
+	      </g>
+      </svg>
+    </div>
+  </body>
+
+  <script>
+   var url = unescape(decodeURIComponent(window.urlParams.screenshot));
+   document.querySelector("body").style.backgroundImage = 'url(' + url + ')';
+  </script>
+
+  <script src="./Tween.min.js"></script>
+  <script src="./p5.min.js"></script>
+  <script src="./p5.sound.min.js"></script>    
+  <script language="javascript" type="text/javascript" src="./sketch.js"></script>  
+</html>
