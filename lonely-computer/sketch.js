@@ -51,10 +51,10 @@ if ( movePoints === true ) {
 cType = "C";
 
 
-var points = [];
+var volumePoints = [];
+var volumeBump = 0.25;
 var maxPoints;
 var baseline;
-var volumeBump;
 var likesNoise;
 
 
@@ -182,9 +182,8 @@ function setup() {
   mic.start();
 
 
-  maxPoints = Math.floor(random(0, 40));
+  maxPoints = 120; //Math.floor(random(0, 40));
   baseline = random(0, 11);
-  volumeBump = random();
 
   if ( random() > 0.5 ) {
     likesNoise = false;
@@ -237,18 +236,24 @@ var getVolume = function() {
   // Get the overall volume (between 0 and 1.0)
   var vol = mic.getLevel() + volumeBump;
 
-  points.push(vol);
-  if ( points.length > maxPoints ) {
-    points.shift();
+  volumePoints.push(vol);
+  if ( volumePoints.length > maxPoints ) {
+    volumePoints.shift();
   }
 
-  var sum = points.reduce(function (a, b) {
+  // weight more recent volume in favor of older data
+  var weightedPoints = volumePoints.map(function(val, idx) {
+    var weight = map(idx, 0, maxPoints, 0, 2.0);
+    var out = val * weight;
+    return out;
+  });
+  
+  var sum = weightedPoints.reduce(function (a, b) {
     return a + b;
   }, 0);
 
-  vol = sum / points.length;
-
-  return vol;
+  var result = sum / volumePoints.length;
+  return result;
 };
 
 function draw() {
@@ -260,10 +265,10 @@ function draw() {
 
   var h;
   if ( likesNoise === true ) {
-    h = map(vol, 0, 1, 0, maxLevel);
+    h = map(vol, 0, 0.9, 0, maxLevel);
   }
   else {
-    h = map(vol, 0, 1, maxLevel, 0);
+    h = map(vol, 0, 0.9, maxLevel, 0);
   }
 
   h = (h + baseline) % 12;
