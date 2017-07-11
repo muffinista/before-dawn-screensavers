@@ -227,7 +227,6 @@ function setup() {
   container.style.left = faceX + "px";  
 
   wiggleEyes();
-
   frameRate(15);
 }
 
