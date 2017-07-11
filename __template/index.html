@@ -2,6 +2,11 @@
 <html>
   <head>
     <title>My Awesome Screensaver</title>
+    <style>
+     body {
+       width: 100%;
+     }
+    </style>
     <script>
      // load any incoming URL parameters. you could just use the
      // URLSearchParams object directly to manage these variables, but
@@ -16,7 +21,7 @@
   </head>
   <body>
     <h1>Hello! I am a screensaver template!</h1>
-    <p>I am located in <code><script>document.write(document.location.pathname);</script></code>.</p>
+    <p>I am located in <code><script>document.write(decodeURIComponent(document.location.pathname));</script></code>.</p>
     <p>Put the content of your screensaver here!</p>
     <h2>Incoming Values</h2>
     <p>(These parameters will be sent to your screensaver when it loads)</p> 
