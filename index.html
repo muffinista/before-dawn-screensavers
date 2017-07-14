@@ -43,6 +43,17 @@
        var template = $('#template').html();
        Mustache.parse(template);
 
+       var load = function(saver) {
+         var url = saver;
+         if ( url.indexOf("index.html") === -1 ) {
+           url = url + "/index.html";
+         }
+         url = url + "?width=800&height=600&screenshot=../__assets/desktop2.png";
+         console.log(url);
+
+         $("iframe").attr("src", url);
+       };
+       
        var getList = function() {
          $.ajax({
            dataType:"json",
@@ -78,18 +89,22 @@
          });
        };
 
+       
        // click handler
-
        $("body").on("click", "ul.savers a", function(e) {
          var url = $(this).attr("href");
-         url = url + "?width=800&height=600&screenshot=../__assets/desktop2.png";
+         var name = url.split('/')[0];
          e.preventDefault();
+         load(url);
 
-         $("iframe").attr("src", url);
+         window.location.hash = "#" + name;
        });
 
 
        getList();
+       if ( window.location.hash ) {
+         load(window.location.hash.substr(1));
+       }
      });
     </script>
     <script id="template" type="x-tmpl-mustache">
