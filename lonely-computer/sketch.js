@@ -1,4 +1,5 @@
 var mic;
+var Color = net.brehaut.Color;
 
 var colors = [
   "#d30100", // 11
@@ -63,8 +64,9 @@ var mapMin = -0.5;
 var mapMax = 0.5;
 
 var currentLevel = -100;
+var minVolumeThreshold = 0.02;
 var moodCheckRate = 100;
-var moodHoldRate = 2000;
+var moodHoldRate = 750;
 
 
 var getCurrentPoints = function(str) {
@@ -147,7 +149,7 @@ function drawFace(l) {
   
 	smile.setAttributeNS(null, "d", pointToPath(point));
 
-//  console.log(point);
+  //  console.log(point);
   
   // brow
   point = {
@@ -157,14 +159,44 @@ function drawFace(l) {
     c2: { x: browPoints.c2.x, y: browPoints.c2.y + l * browControlDiff }
   };
 
-//  console.log(point);
+  //  console.log(point);
   brow.setAttributeNS(null, "d", pointToPath(point));
 
-  var fill = colors[Math.floor(l)];
-  face.style.fill = fill;
-
+  //face.style.fill = fill;
 }
 
+var setFaceFill = function(l, rate) {
+  var fill = colors[Math.floor(l)];
+
+  var c = Color(face.style.fill); 
+  var start = {
+    r: c.getRed(),
+    g: c.getGreen(),
+    b: c.getBlue()
+  };
+
+  c = Color(fill);
+  //console.log("!!!!!!!!", fill, c);
+  var end = {
+    r: c.getRed(),
+    g: c.getGreen(),
+    b: c.getBlue()
+  }
+  //console.log(start, end, fill);
+  
+  tween = new TWEEN.Tween(start);
+  tween.to(end, rate)
+       .onUpdate(function() {
+         var tmp = Color([this.r * 255, this.g * 255, this.b * 255]);
+         //console.log(tmp.toString());
+         face.style.fill = tmp.toRGB();
+       })
+       .onComplete(function() {
+         //setTimeout(wiggleEyes, next_tween);
+       });
+  tween.start();
+
+};
 
 
 function setup() {
@@ -236,6 +268,7 @@ function setup() {
   container.style.left = faceX + "px";  
 
   wiggleEyes();
+  setFaceFill(currentLevel, 10);
   frameRate(15);
 
   recordVolume();
@@ -266,13 +299,12 @@ var getVolumeDiff = function() {
 
   var recent_average = sum / recentPoints.length;
 
-  console.log("TOTAL: " + total_average + ", RECENT: " + recent_average);
+  //  console.log("TOTAL: " + total_average + ", RECENT: " + recent_average);
 
   var diff = recent_average - total_average;
   return diff;
 };
 
-var minVolumeThreshold = 0.02;
 
 var updateMood = function() {
   //console.log("updateMood");
@@ -297,7 +329,6 @@ var updateMood = function() {
     }    
   }
   else {
-    //console.log("bump!", diff);
     if ( likesNoise === true && diff > 0) {
       bump = -1;
     }
@@ -307,6 +338,7 @@ var updateMood = function() {
   }
 
   if ( bump !== 0 ) {
+    console.log("bump!", diff);
     waitFor = moodHoldRate;
 
     currentLevel = currentLevel + bump;
@@ -316,6 +348,7 @@ var updateMood = function() {
     else if ( currentLevel >= maxLevel ) {
       currentLevel = maxLevel - 1;
     }
+    setFaceFill(currentLevel, waitFor);
   }
 
   setTimeout(updateMood, waitFor);
