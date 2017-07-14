@@ -1,8 +1,9 @@
 {
   "name": "Lonely Computer",
-  "description": "A smiley face that gets happy or sad",
+  "description": "A smiley face that gets happy or sad depending upon how much noise it hears",
   "aboutUrl": "",
   "author": "Colin Mitchell",
   "source": "index.html",
-  "options": []
+  "options": [],
+  "editable": true
 }

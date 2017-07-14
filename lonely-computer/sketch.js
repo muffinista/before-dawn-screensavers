@@ -53,9 +53,18 @@ cType = "C";
 
 var volumePoints = [];
 var volumeBump = 0.25;
-var maxPoints;
+var samplePoints = 5;
+var maxPoints = 1000;
+
 var baseline;
 var likesNoise;
+
+var mapMin = -0.5;
+var mapMax = 0.5;
+
+var currentLevel = -100;
+var moodCheckRate = 100;
+var moodHoldRate = 2000;
 
 
 var getCurrentPoints = function(str) {
@@ -182,9 +191,9 @@ function setup() {
   mic.start();
 
 
-  maxPoints = 120; //Math.floor(random(0, 40));
   baseline = random(0, 11);
-
+  currentLevel = baseline;
+  
   if ( random() > 0.5 ) {
     likesNoise = false;
   }
@@ -194,7 +203,7 @@ function setup() {
 
   current_wiggle_wait = random(1, max_wiggle_wait);
   
-  console.log("data points: " + maxPoints);
+  console.log("data points: " + samplePoints);
   console.log("baseline: " + baseline);
   console.log("volume bump: " + volumeBump);
   console.log("likes noise: " + likesNoise);
@@ -228,49 +237,78 @@ function setup() {
 
   wiggleEyes();
   frameRate(15);
+
+  recordVolume();
+  updateMood();
 }
 
-
-var getVolume = function() {
+var recordVolume = function() {
   // Get the overall volume (between 0 and 1.0)
-  var vol = mic.getLevel() + volumeBump;
-
+  var vol = mic.getLevel();
+  //console.log("VOL:  " + vol);
   volumePoints.push(vol);
   if ( volumePoints.length > maxPoints ) {
     volumePoints.shift();
   }
+};
 
-  // weight more recent volume in favor of older data
-  var weightedPoints = volumePoints.map(function(val, idx) {
-    var weight = map(idx, 0, maxPoints, 0, 2.0);
-    var out = val * weight;
-    return out;
-  });
+var getVolumeDiff = function() {
+
+  var total_average = volumePoints.reduce(function (a, b) {
+    return a + b;
+  }, 0) / volumePoints.length;
+
   
-  var sum = weightedPoints.reduce(function (a, b) {
+  var recentPoints = volumePoints.slice( -samplePoints );
+  var sum = recentPoints.reduce(function (a, b) {
     return a + b;
   }, 0);
 
-  var result = sum / volumePoints.length;
-  return result;
+  var recent_average = sum / recentPoints.length;
+
+//  console.log("TOTAL: " + total_average + ", RECENT: " + recent_average);
+
+  var diff = recent_average - total_average;
+  return diff;
+};
+
+
+var updateMood = function() {
+  //console.log("updateMood");
+  var diff = getVolumeDiff();
+  //console.log("DIFF: ", Math.abs(diff));
+
+  
+  var h;
+  var _min, _max;
+  var waitFor = moodCheckRate;
+
+  var bump = 0;
+
+  if ( Math.abs(diff) <= 0.02 ) {
+    
+  }
+  else {
+    //console.log("bump!", diff);
+    if ( likesNoise === true && diff > 0) {
+      bump = 1;
+    }
+    else {
+      bump = -1;
+    }
+
+    currentLevel = Math.abs((currentLevel + bump) % 12);
+    //console.log(currentLevel);
+    waitFor = moodHoldRate;
+  }
+  setTimeout(updateMood, waitFor);
+
+
 };
 
 function draw() {
+  recordVolume();
   clear();
-
 	TWEEN.update();
-
-  var vol = getVolume();
-
-  var h;
-  if ( likesNoise === true ) {
-    h = map(vol, 0, 0.9, 0, maxLevel);
-  }
-  else {
-    h = map(vol, 0, 0.9, maxLevel, 0);
-  }
-
-  h = (h + baseline) % 12;
-
-  drawFace(h);
+  drawFace(currentLevel); 
 }
