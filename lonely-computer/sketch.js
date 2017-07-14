@@ -191,7 +191,7 @@ function setup() {
   mic.start();
 
 
-  baseline = random(0, 11);
+  baseline = parseInt(random(0, 11), 10);
   currentLevel = baseline;
   
   if ( random() > 0.5 ) {
@@ -266,12 +266,13 @@ var getVolumeDiff = function() {
 
   var recent_average = sum / recentPoints.length;
 
-//  console.log("TOTAL: " + total_average + ", RECENT: " + recent_average);
+  console.log("TOTAL: " + total_average + ", RECENT: " + recent_average);
 
   var diff = recent_average - total_average;
   return diff;
 };
 
+var minVolumeThreshold = 0.02;
 
 var updateMood = function() {
   //console.log("updateMood");
@@ -285,25 +286,39 @@ var updateMood = function() {
 
   var bump = 0;
 
-  if ( Math.abs(diff) <= 0.02 ) {
-    
+  if ( Math.abs(diff) <= minVolumeThreshold ) {
+    if ( currentLevel !== baseline ) {
+      if ( currentLevel > baseline ) {
+        bump = -1;
+      }
+      else {
+        bump = 1;
+      }
+    }    
   }
   else {
     //console.log("bump!", diff);
     if ( likesNoise === true && diff > 0) {
-      bump = 1;
-    }
-    else {
       bump = -1;
     }
-
-    currentLevel = Math.abs((currentLevel + bump) % 12);
-    //console.log(currentLevel);
-    waitFor = moodHoldRate;
+    else {
+      bump = 1;
+    }
   }
+
+  if ( bump !== 0 ) {
+    waitFor = moodHoldRate;
+
+    currentLevel = currentLevel + bump;
+    if ( currentLevel < 0 ) {
+      currentLevel = 0;
+    }
+    else if ( currentLevel >= maxLevel ) {
+      currentLevel = maxLevel - 1;
+    }
+  }
+
   setTimeout(updateMood, waitFor);
-
-
 };
 
 function draw() {
