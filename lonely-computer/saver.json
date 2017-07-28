@@ -1,6 +1,6 @@
 {
   "name": "Lonely Computer",
-  "description": "A smiley face that gets happy or sad depending upon how much noise it hears",
+  "description": "A smiley face that reacts to noise.",
   "aboutUrl": "",
   "author": "Colin Mitchell",
   "source": "index.html",
