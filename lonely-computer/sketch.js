@@ -53,9 +53,6 @@ cType = "C";
 
 
 var volumePoints = [];
-var volumeBump = 0.25;
-var samplePoints = 5;
-var maxPoints = 1000;
 
 var baseline;
 var likesNoise;
@@ -64,9 +61,34 @@ var mapMin = -0.5;
 var mapMax = 0.5;
 
 var currentLevel = -100;
+
+const volumeThresholds = [0.05, 0.02];
+const cooldownThresholds = [0.04, 0.025];
+const moodCheckRange = [250, 50];
+const moodHoldRange = [1250, 250];
+
+const volumeSampleRange = [1500, 250];
+
+//
+// NOTE: the variables below get tweaked in setup()
+//
+
+// how much noise before mood triggered?
 var minVolumeThreshold = 0.02;
+var minCooldownThreshold = 0.02;
+
+// how often to check mood?
 var moodCheckRate = 100;
+
+// after mood change, how long to wait before checking again
 var moodHoldRate = 750;
+
+// how many volume samples to hold?
+var maxPoints = 1000;
+
+// how many points for recent volume?
+var samplePoints = 5;
+
 
 
 var getCurrentPoints = function(str) {
@@ -214,7 +236,27 @@ function setup() {
   display_width = parseInt(display_width, 10);
   display_height = parseInt(display_height, 10);
 
+  if ( typeof(window.sensitivity) !== "undefined" ) {
+    sensitivity = parseInt(window.sensitivity, 10);
+  }
+  else {
+    sensitivity = 100;
+  }
+    
 
+  minVolumeThreshold = map(sensitivity, 0, 100, volumeThresholds[0], volumeThresholds[1]);
+  minCooldownThreshold = map(sensitivity, 0, 100, cooldownThresholds[0], cooldownThresholds[1]);  
+  moodCheckRate = map(sensitivity, 0, 100, moodCheckRange[0], moodCheckRange[1]);
+  moodHoldRate = map(sensitivity, 0, 100, moodHoldRange[0], moodHoldRange[1]);
+  maxPoints = map(sensitivity, 0, 100, volumeSampleRange[0], volumeSampleRange[1]);
+
+  console.log("minVolumeThreshold: " + minVolumeThreshold);
+  console.log("minCooldownThreshold: " + minCooldownThreshold);  
+  console.log("moodCheckRate: " + moodCheckRate);
+  console.log("moodHoldRate: " + moodHoldRate);
+  console.log("maxPoints: " + maxPoints);
+
+  
   // Create an Audio input
   mic = new p5.AudioIn();
 
@@ -223,7 +265,7 @@ function setup() {
   mic.start();
 
 
-  baseline = parseInt(random(0, 11), 10);
+  baseline = 11; //parseInt(random(0, 11), 10);
   currentLevel = baseline;
   
   if ( random() > 0.5 ) {
@@ -233,11 +275,12 @@ function setup() {
     likesNoise = true;
   }
 
+  likesNoise = false;
+  
   current_wiggle_wait = random(1, max_wiggle_wait);
   
   console.log("data points: " + samplePoints);
   console.log("baseline: " + baseline);
-  console.log("volume bump: " + volumeBump);
   console.log("likes noise: " + likesNoise);
   
   
@@ -278,7 +321,7 @@ function setup() {
 var recordVolume = function() {
   // Get the overall volume (between 0 and 1.0)
   var vol = mic.getLevel();
-  //console.log("VOL:  " + vol);
+
   volumePoints.push(vol);
   if ( volumePoints.length > maxPoints ) {
     volumePoints.shift();
@@ -287,7 +330,8 @@ var recordVolume = function() {
 
 var getVolumeDiff = function() {
 
-  var total_average = volumePoints.reduce(function (a, b) {
+  // remove current points from total average
+  var total_average = volumePoints.slice(0, -samplePoints).reduce(function (a, b) {
     return a + b;
   }, 0) / volumePoints.length;
 
@@ -299,7 +343,7 @@ var getVolumeDiff = function() {
 
   var recent_average = sum / recentPoints.length;
 
-  //  console.log("TOTAL: " + total_average + ", RECENT: " + recent_average);
+  //console.log("TOTAL: " + total_average + ", RECENT: " + recent_average);
 
   var diff = recent_average - total_average;
   return diff;
@@ -307,19 +351,19 @@ var getVolumeDiff = function() {
 
 
 var updateMood = function() {
-  //console.log("updateMood");
   var diff = getVolumeDiff();
-  //console.log("DIFF: ", Math.abs(diff));
-
   
   var h;
   var _min, _max;
   var waitFor = moodCheckRate;
 
   var bump = 0;
-
-  if ( Math.abs(diff) <= minVolumeThreshold ) {
+  var cooldown = false;
+  
+  if ( Math.abs(diff) <= minCooldownThreshold ) {
     if ( currentLevel !== baseline ) {
+      cooldown = true;
+
       if ( currentLevel > baseline ) {
         bump = -1;
       }
@@ -328,17 +372,17 @@ var updateMood = function() {
       }
     }    
   }
-  else {
-    if ( likesNoise === true && diff > 0) {
-      bump = -1;
+  else if ( Math.abs(diff) >= minVolumeThreshold ) {
+    if ( likesNoise === true ) {
+      bump = 1;
     }
     else {
-      bump = 1;
+      bump = -1;
     }
   }
 
   if ( bump !== 0 ) {
-    console.log("bump!", diff);
+    console.log("bump!", cooldown, diff, bump, currentLevel + bump);
     waitFor = moodHoldRate;
 
     currentLevel = currentLevel + bump;

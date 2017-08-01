@@ -4,6 +4,15 @@
   "aboutUrl": "",
   "author": "Colin Mitchell",
   "source": "index.html",
-  "options": [],
+  "options": [
+    {
+      "name": "sensitivity",
+      "type": "slider",
+      "description": "noise sensitivity",
+      "min": "1",
+      "max": "100",
+      "default": "50"
+    }
+  ],
   "editable": true
 }
