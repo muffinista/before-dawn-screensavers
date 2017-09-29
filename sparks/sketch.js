@@ -52,6 +52,10 @@ var randomColor = function() {
   return lerpColor(c1, c2, random(paletteLerps));
 };
 
+/**
+ * create a sprite image. we have a few rough templates
+ * to work from here and we pick randomly from them
+ */
 function createSparkImage() {
   var type = random(["ellipse", "rect", "point"]);
   var pg = createGraphics(40, 40);  
@@ -68,7 +72,7 @@ function createSparkImage() {
       break;
     case 'rect':
       pg.rectMode(CENTER);
-      pg.rect(pg.width/2, pg.height/2, 15, 20);
+      pg.rect(pg.width/2, pg.height/2, 15, 20, 10);
       break;
     case 'point':
       pg.rectMode(CENTER);
