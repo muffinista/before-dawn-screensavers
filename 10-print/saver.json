@@ -3,5 +3,6 @@
   "source": "index.html",
   "description": "Classic C64 style animation",
   "aboutUrl": "http://muffinlabs.com/",
+  "requirements": [],
   "options": []
 }

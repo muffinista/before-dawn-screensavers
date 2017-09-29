@@ -4,5 +4,6 @@
   "aboutUrl": "https://apod.nasa.gov/apod/astropix.html",
   "author": "Colin Mitchell",
   "source": "index.html",
+  "requirements": [],
   "options": []
 }

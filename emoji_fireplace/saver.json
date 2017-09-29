@@ -2,5 +2,6 @@
   "name": "Emoji Fireplace",
   "source": "index.html",
   "description": "A nice emoji-powered fireplace",
-  "aboutUrl": "http://muffinlabs.com/emoji_yule_log"
+  "aboutUrl": "http://muffinlabs.com/emoji_yule_log",
+  "requirements": [],
 }
