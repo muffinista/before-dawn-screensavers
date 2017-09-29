@@ -12,37 +12,37 @@ var maxFrames = 100000;
 
 
 function preload() {
-    var url = unescape(decodeURIComponent(window.urlParams.screenshot));
-    img = loadImage(url);
+  var url = unescape(decodeURIComponent(window.urlParams.screenshot));
+  img = loadImage(url);
 }
 
 function setup() {
 
-    // figure out the screen dimensions
-    var display_width, display_height;
-    if ( typeof(window.urlParams) !== "undefined" ) {
-        display_width = window.urlParams.width;
-        display_height = window.urlParams.height;
-    }
-    else {
-        display_width = screen.width;
-        display_height = screen.height;
-    }
+  // figure out the screen dimensions
+  var display_width, display_height;
+  if ( typeof(window.urlParams) !== "undefined" ) {
+    display_width = window.urlParams.width;
+    display_height = window.urlParams.height;
+  }
+  else {
+    display_width = screen.width;
+    display_height = screen.height;
+  }
+  
+  // note -- if you don't do this, width/height will be strings!
+  display_width = parseInt(display_width, 10);
+  display_height = parseInt(display_height, 10);
+  
+  frameRate(60);
 
-    // note -- if you don't do this, width/height will be strings!
-    display_width = parseInt(display_width, 10);
-    display_height = parseInt(display_height, 10);
+  createCanvas(display_width, display_height);
 
-    frameRate(60);
+  pg = createGraphics(display_width, display_height);
 
-    createCanvas(display_width, display_height);
+  pg.noStroke();
+  pg.background(0);
 
-    pg = createGraphics(display_width, display_height);
-
-    pg.noStroke();
-    pg.background(0);
-
-    img.loadPixels();
+  img.loadPixels();
 }
 
 function draw() {
