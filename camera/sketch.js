@@ -17,10 +17,17 @@ function setup() {
   display_width = parseInt(display_width, 10);
   display_height = parseInt(display_height, 10);
 
+  // we'll generate a video 160px wide and maintaining the screen's
+  // aspect ration
+  ratio = display_width/display_height
+  capture_width = 160;
+  capture_height = 160 / ratio;
+ 
+  
   frameRate(5);
   createCanvas(display_width, display_height);
   capture = createCapture(VIDEO);
-  capture.size(320, 200);
+  capture.size(capture_width, capture_height);
   capture.hide();
 
   textFont(myFont);
@@ -43,7 +50,6 @@ function draw() {
   //filter('THRESHOLD', 0.6);
   filter('POSTERIZE', 4);
 
-  fill(255);
 
   var today = new Date();
   var h = zeroPad(today.getHours());
@@ -51,5 +57,16 @@ function draw() {
   var s = zeroPad(today.getSeconds());
   var ms = zeroPad(Math.round(today.getMilliseconds() / 10));
   var t = h + ":" + m + ":" + s + "." + ms;
+
+  var boxWidth = textWidth(t) + 20;
+  var boxHeight = textAscent() + textDescent();
+
+  // draw a box to hold the timestamp
+  fill(0);
+  rect(width-boxWidth, height-boxHeight, boxWidth, boxHeight);
+
+  // draw the timestamp
+  fill(255);
   text(t, width - 10, height);
+
 }
