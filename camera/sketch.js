@@ -18,7 +18,7 @@ function setup() {
   display_height = parseInt(display_height, 10);
 
   // we'll generate a video 160px wide and maintaining the screen's
-  // aspect ration
+  // aspect ratio
   ratio = display_width/display_height
   capture_width = 160;
   capture_height = 160 / ratio;
