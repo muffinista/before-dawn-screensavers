@@ -1,8 +1,9 @@
 {
   "name": "Camera",
-  "description": "What goes on when you're not there?",
+  "description": "Displays a stylized version of what your webcamera sees",
   "aboutUrl": "",
-  "author": "",
+  "author": "Colin Mitchell",
   "source": "index.html",
+  "requirements": [],
   "options": []
 }
