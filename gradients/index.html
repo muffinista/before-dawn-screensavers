@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>~~ gradients ~~</title>
+    <!--
+         I cycle through gradients forever and ever!
+
+         CSS gradients: https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Images/Using_CSS_gradients
+         Tween.js: https://github.com/tweenjs/tween.js/blob/master/docs/user_guide.md
+
+       -->
+    <script src="./handlebars-v4.0.10.js"></script>
+    <script src="./Tween.js"></script>
+
+    <style>
+     html, body {
+       height: 100%;
+       margin: 0;
+       background-color: black;
+     }
+     body {
+       display: flex;
+     }
+     body > div {
+       flex: 1;
+     }
+    </style>
+  </head>
+  <body>
+    <div></div>
+    <script id="gradient" type="text/x-handlebars-template">linear-gradient({{angle}}deg, {{color1}}, {{color2}} {{offset}}%)</script>
+
+    <script>
+     var source = document.scripts["gradient"].innerHTML;
+     var toGradient = Handlebars.compile(source);
+
+     var tweenCount = 3;
+     var minDuration = 10000;
+     var durationRange = 30000;
+     var maxOffset = 130;
+
+     var div = document.querySelector("div");
+     var gradients = {};
+     
+     var randColorFrag = function() {
+       return Math.trunc( Math.random() * 255 );
+     }
+
+     //
+     // turn incoming RGBa vals into a CSS rgba() string
+     //
+     var toColor = function(r, g, b, a) {
+       r = Math.trunc(r);
+       g = Math.trunc(g);
+       b = Math.trunc(b);
+
+       return "rgba(" + [r, g, b, a].join(",") + ")";
+     }
+
+     //
+     // generate a new gradient
+     //
+     var gradient = function() {
+       var angle = Math.trunc( Math.random() * 360 );
+       var offset = Math.trunc( Math.random() * maxOffset );
+
+       return {
+         angle: angle,
+         r1: randColorFrag(),
+         g1: randColorFrag(),
+         b1: randColorFrag(),
+         a1: Math.random(),
+         r2: randColorFrag(),
+         g2: randColorFrag(),
+         b2: randColorFrag(),
+         a2: Math.random(),
+         offset: offset
+       }
+     }
+
+     // iterate through our gradient data
+     // and turn it into a CSS style we can apply
+     var redraw = function(gradients) {
+       var css = [];
+       for ( const k in gradients ) {
+         var g = gradients[k];
+         var s1 = toGradient({
+           angle: Math.trunc(g.angle),
+           color1: toColor(g.r1, g.g1, g.b1, g.a1),
+           color2: toColor(g.r2, g.g2, g.b2, g.a2),
+           offset: Math.trunc(g.offset)
+         });
+         css.push(s1);
+       }
+
+       div.style.background = css.join(", ");
+     };
+     
+
+     // update global data with this tween update,
+     // and redraw
+     var updateGradientAttrs = function(obj) {
+       gradients[obj.index] = obj;
+       redraw(gradients);
+     }
+
+     // add a new gradient tween based off the specified src
+     var addGradient = function(obj) {
+       gradientTween(obj.index, obj).start();
+     }
+
+     // create a gradient tween. if src is specified,
+     // start from there (this way we'll continue completed
+     // gradients)
+     var gradientTween = function(index, src) {
+       var tween;
+       if ( typeof(src) === "undefined" ) {
+         src = gradient();
+       }
+       var dest = gradient();
+
+       src.index = index;
+       dest.index = index;
+
+       var duration = minDuration + Math.random() * durationRange;
+       //console.log("see you in " + duration, src, dest);
+       tween = new TWEEN.Tween(src)
+                        .to(dest, duration)
+                        .easing(TWEEN.Easing.Quadratic.Out) // Use an easing function to make the animation smooth.
+                        .onUpdate(updateGradientAttrs)
+                        .onComplete(addGradient);
+       return tween;
+     }
+
+
+     // setup initial gradient tweens
+     for ( var i = 0 ; i < tweenCount; i++ ) {
+       gradientTween(i).start();
+     }
+     
+     animate();
+
+     // Setup the animation loop.
+     function animate(time) {
+       requestAnimationFrame(animate);
+       TWEEN.update(time);
+     }
+    </script>
+  </body>
+</html>
