@@ -1,6 +1,6 @@
 {
   "name": "before-dawn-screensavers",
-  "version": "0.9.21",
+  "version": "0.9.22",
   "description": "A package of the screensavers for Before Dawn",
   "author": "Colin Mitchell <colin@muffinlabs.com> (http://muffinlabs.com)",
   "devDependencies": {
@@ -8,5 +8,8 @@
     "grunt-contrib-watch": "^1.0.0",
     "lodash": "^4.17.4",
     "grunt-release": "^0.14.0"
+  },
+  "dependencies": {
+    "dotenv": "^4.0.0"
   }
 }
