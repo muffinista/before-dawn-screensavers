@@ -44,6 +44,7 @@ module.exports = function(grunt) {
       options: {
         beforeRelease: ['rebuild', 'preflight'],
         commitMessage: "Release <%= version %>",
+        tagName: 'v<%= version %>',
         npm: false
       }
     }
