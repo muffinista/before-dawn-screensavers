@@ -9,7 +9,6 @@
          Tween.js: https://github.com/tweenjs/tween.js/blob/master/docs/user_guide.md
 
        -->
-    <script src="./handlebars-v4.0.10.js"></script>
     <script src="./Tween.js"></script>
 
     <style>
@@ -28,19 +27,17 @@
   </head>
   <body>
     <div></div>
-    <script id="gradient" type="text/x-handlebars-template">linear-gradient({{angle}}deg, {{color1}}, {{color2}} {{offset}}%)</script>
-
+    
     <script>
-     var source = document.scripts["gradient"].innerHTML;
-     var toGradient = Handlebars.compile(source);
-
-     var tweenCount = 3;
-     var minDuration = 10000;
-     var durationRange = 30000;
+     var tweenCount = 2;
+     var minDuration = 30000;
+     var durationRange = 40000;
      var maxOffset = 130;
 
      var div = document.querySelector("div");
      var gradients = {};
+
+     var toGradient = data => `linear-gradient(${data.angle}deg, ${data.color1}, ${data.color2} ${data.offset}%)`;
      
      var randColorFrag = function() {
        return Math.trunc( Math.random() * 255 );
@@ -49,13 +46,16 @@
      //
      // turn incoming RGBa vals into a CSS rgba() string
      //
-     var toColor = function(r, g, b, a) {
+     var dddtoColor = function(r, g, b, a) {
        r = Math.trunc(r);
        g = Math.trunc(g);
        b = Math.trunc(b);
 
-       return "rgba(" + [r, g, b, a].join(",") + ")";
+       return `rgba(${r},${g},${b},${a})`;
      }
+
+//     var toColor = (r,g,b,a) => `rgba(${Math.trunc(r)},${Math.trunc(g)},${Math.trunc(b)},${a})`;
+     var toColor = (r,g,b,a) => `rgba(${r|0},${g|0},${b|0},${a})`;     
 
      //
      // generate a new gradient
@@ -82,6 +82,8 @@
      // and turn it into a CSS style we can apply
      var redraw = function(gradients) {
        var css = [];
+       var newCSS = "none";
+
        for ( const k in gradients ) {
          var g = gradients[k];
          var s1 = toGradient({
@@ -92,8 +94,8 @@
          });
          css.push(s1);
        }
-
-       div.style.background = css.join(", ");
+       newCSS = css.join(", ");
+       div.style.background = newCSS;
      };
      
 
@@ -101,7 +103,7 @@
      // and redraw
      var updateGradientAttrs = function(obj) {
        gradients[obj.index] = obj;
-       redraw(gradients);
+       doRedraw = true;
      }
 
      // add a new gradient tween based off the specified src
@@ -123,7 +125,6 @@
        dest.index = index;
 
        var duration = minDuration + Math.random() * durationRange;
-       //console.log("see you in " + duration, src, dest);
        tween = new TWEEN.Tween(src)
                         .to(dest, duration)
                         .easing(TWEEN.Easing.Quadratic.Out) // Use an easing function to make the animation smooth.
@@ -140,11 +141,34 @@
      
      animate();
 
+     var halftime = false;
+     var doRedraw = false;
+
      // Setup the animation loop.
      function animate(time) {
+       if ( halftime === false ) {
+         halftime = true;
+       }
+       else {
+         halftime = false;
+         if ( doRedraw ) {
+           redraw(gradients);
+           doRedraw = false;
+         }
+         TWEEN.update(time);
+       }
+
        requestAnimationFrame(animate);
-       TWEEN.update(time);
      }
+
+     /*     var g= gradient();
+        var t0 = performance.now();
+        for(var i = 0; i < 10000000; i++ ) {
+        toColor(g.r1, g.g1, g.b1, g.a1);
+        }
+        var t1 = performance.now();     
+        console.log("Call took " + (t1 - t0) + " milliseconds.");
+      */   
     </script>
   </body>
 </html>

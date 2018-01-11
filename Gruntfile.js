@@ -1,4 +1,6 @@
 module.exports = function(grunt) {
+  require('dotenv').config();
+  
   const fs = require('fs')
   const path = require('path')
   const _ = require('lodash');
@@ -45,7 +47,11 @@ module.exports = function(grunt) {
         beforeRelease: ['rebuild', 'preflight'],
         commitMessage: "Release <%= version %>",
         tagName: 'v<%= version %>',
-        npm: false
+        npm: false,
+        github: {
+          repo: 'muffinista/before-dawn-screensavers',
+          accessTokenVar: 'GITHUB_ACCESS_TOKEN'
+        }
       }
     }
   });
