@@ -3,7 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <title>emoji fireplace</title>
-  <script language="javascript" type="text/javascript" src="./libraries/p5.js"></script>
+  <script>
+   window.urlParams = window.location.search.split(/[?&]/).slice(1).map(function(paramPair) {
+     return paramPair.split(/=(.+)?/).slice(0, 2);
+   }).reduce(function (obj, pairArray) {            
+     obj[pairArray[0]] = pairArray[1];
+     return obj;
+   }, {});
+  </script>
+  <script language="javascript" type="text/javascript" src="./libraries/p5.min.js"></script>
   <script src="./libraries/lodash.min.js"></script>
   <script language="javascript" type="text/javascript" src="./sketch.js"></script>
   <style>
@@ -43,7 +51,6 @@
      text-decoration: none;
    }
   </style>
-   <link rel="shortcut icon" type="image/png" href="https://raw.githubusercontent.com/twitter/twemoji/gh-pages/72x72/1f525.png"/>
 </head>
 
 
@@ -51,9 +58,16 @@
   <div id="fireplace">
     <img src="./background.jpg" />
   </div>
-
   <div id="sounds">
-    <iframe width="560" height="315" src="https://www.youtube.com/embed/lJ3H_SR1dXU?autoplay=1&loop=1&playlist=lJ3H_SR1dXU" frameborder="0" allowfullscreen></iframe>
   </div>
+
+  <script>
+   var soundMovie = '<iframe width="560" height="315" src="https://www.youtube.com/embed/lJ3H_SR1dXU?autoplay=1&loop=1&playlist=lJ3H_SR1dXU" frameborder="0" allowfullscreen></iframe>';
+   if ( window.urlParams.sound === true || window.urlParams.sound === "true" ) {
+     var template = document.createElement('template');
+     template.innerHTML = soundMovie;
+     sounds.appendChild(template.content.firstChild);
+   }
+  </script>
 </body>
 </html>
