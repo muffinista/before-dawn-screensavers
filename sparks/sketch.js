@@ -1,3 +1,4 @@
+var maxSparkCount = 2000;
 var sparkCount = 2000;
 var sparkTypeCount = 10;
 var sparkLifespan = 250.0;
@@ -88,6 +89,7 @@ function createSparkImage() {
 function setup() {
   // figure out the screen dimensions
   var display_width, display_height;
+  var density = 50;
 
   if ( typeof(window.urlParams) !== "undefined" ) {
     display_width = window.urlParams.width;
@@ -96,10 +98,11 @@ function setup() {
   else {
     display_width = screen.width;
     display_height = screen.height;
+    density = parseInt(window.urlParams.density, 10);
   }
 
-  //  display_width = 800;
-  //  display_height = 600;
+  sparkCount = maxSparkCount * (density/100.0);
+
   frameRate(30);
 
   // note -- if you don't do this, width/height will be strings!

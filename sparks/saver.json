@@ -5,5 +5,14 @@
   "author": "Colin Mitchell",
   "source": "index.html",
   "requirements": [],
-  "options": []
+  "options": [
+    {
+      "name": "density",
+      "type": "slider",
+      "description": "How many sparks?",
+      "min": "1",
+      "max": "100",
+      "default": "75"
+    }
+  ]
 }
