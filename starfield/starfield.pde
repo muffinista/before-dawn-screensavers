@@ -60,26 +60,30 @@ float max_radius = 4;
 
 int display_width;
 int display_height;
-
+int density;
 
 void setup() {
   if ( typeof(window.urlParams) !== "undefined" ) {
     display_width = window.urlParams.width;
     display_height = window.urlParams.height;
+    density = window.urlParams.density;
   }
   else {
     display_width = screen.width;
     display_height = screen.height;
+    density = 50;
   }
 
   // note -- if you don't do this, width/height will be strings!
   display_width = parseInt(display_width, 10);
   display_height = parseInt(display_height, 10);
+  density = parseInt(density, 10);
   
 	size(display_width, display_height, P3D);
 	smooth();
 	frameRate(fps);
 
+  count = parseInt(count * (density/100.0), 10);
   stars = new Star[count];
    
   for(int index = 0; index < count; index++) {
