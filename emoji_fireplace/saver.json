@@ -3,7 +3,9 @@
   "source": "index.html",
   "description": "A nice emoji-powered fireplace",
   "aboutUrl": "http://muffinlabs.com/emoji_yule_log",
-  "requirements": ["none"],
+  "requirements": [
+    "none"
+  ],
   "options": [
     {
       "index": 1,
