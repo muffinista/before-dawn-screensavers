@@ -15,23 +15,24 @@
   <script src="./libraries/lodash.min.js"></script>
   <script language="javascript" type="text/javascript" src="./sketch.js"></script>
   <style>
-   body {
-     padding: 0; margin: 0;
-     background: black;
+   html, body {
+     height: 100%;
+     padding: 0;
+     margin: 0;
    }
-
-   div {
-     width: 1200px;
-     margin: 0 auto;
+   body {
+     background: black;
+     display: flex;
+     justify-content: center;
    }
    #fireplace {
-     position: relative;
-     clear: both;
+     align-self: flex-end;
    }
    #fireplace canvas {
      position: absolute;
-     top: 225px;
-     left: 360px;
+     bottom: 225px;
+     left: 50%;
+     margin-left: -240px;
    }
    img {
      opacity: 0.6;
@@ -40,15 +41,6 @@
    #sounds {
      position: absolute;
      left: -9999px;
-   }
-
-   .credits {
-     margin-top: 200px;
-     color: #888888;
-   }
-   a {
-     color: #660000;
-     text-decoration: none;
    }
   </style>
 </head>
