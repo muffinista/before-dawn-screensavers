@@ -37,3 +37,9 @@ bower_components
 *.map
 
 app/ui/*.js
+
+
+.DS_Store
+.env
+
+**/tmp
