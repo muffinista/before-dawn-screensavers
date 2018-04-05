@@ -1,0 +1,45 @@
+{
+  "name": "Mystify!",
+  "description": "~~ mystify your mind ~~ A version of the old Windows mystify screensaver",
+  "aboutUrl": "http://muffinlabs.com/",
+  "author": "Colin Mitchell",
+  "source": "index.html",
+  "options": [
+    {
+      "index": 1,
+      "name": "Shapes",
+      "type": "slider",
+      "description": "How many shapes?",
+      "min": "1",
+      "max": "10",
+      "default": "2"
+    },
+    {
+      "index": 2,
+      "name": "Vertex Count",
+      "type": "slider",
+      "description": "How many vertices in each shape?",
+      "min": "3",
+      "max": "10",
+      "default": "4"
+    },
+    {
+      "index": 3,
+      "name": "Speed",
+      "type": "slider",
+      "description": "How much movement?",
+      "min": "1",
+      "max": "20",
+      "default": "5"
+    },
+    {
+      "index": 4,
+      "name": "Fade Rate",
+      "type": "slider",
+      "description": "How fast to fade?",
+      "min": "1",
+      "max": "20",
+      "default": "3"
+    }
+  ]
+}
