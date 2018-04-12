@@ -8,8 +8,6 @@ for(let k of tmpParams.keys() ) {
   window.urlParams[k] = tmpParams.get(k);
 }
 
-console.log(window.urlParams);
-
 
 let shape_count = 2; // how many shapes to draw?
 let alpha_bump = 3; window.urlParams['Fade Rate'] || 3; // how much to fade alpha each time we draw
