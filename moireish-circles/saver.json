@@ -49,6 +49,15 @@
       "min": "10",
       "max": "50",
       "default": "30"
+    },
+    {
+      "index": 6,
+      "name": "Frame Rate",
+      "type": "slider",
+      "description": "",
+      "min": "10",
+      "max": "120",
+      "default": "60"
     }
   ]
 }

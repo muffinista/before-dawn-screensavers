@@ -20,6 +20,7 @@ let MIN_SPEED = getParam('Min Speed', 2);
 let MAX_SPEED = getParam('Max Speed', 4);
 let MIN_DELAY = getParam('Min Delay', 5);
 let MAX_DELAY = getParam('Max Delay', 30);
+let FRAME_RATE = getParam('Frame Rate', 60);
 
 const EMITTER_MARGIN = 0.25;
 const MIN_BRIGHT = 64;
@@ -128,6 +129,7 @@ function setup() {
   // use radius when drawing ellipsis
   ellipseMode(RADIUS);
 
+  frameRate(FRAME_RATE);
   generateEmitters(w, h);
 }
 
