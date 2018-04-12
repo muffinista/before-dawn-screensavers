@@ -1,0 +1,54 @@
+{
+  "name": "Moireish Circles",
+  "description": "Multicolored circles make a cool pattern on your screen",
+  "aboutUrl": "http://muffinlabs.com/",
+  "author": "Colin Mitchell",
+  "source": "index.html",
+  "options": [
+    {
+      "index": 1,
+      "name": "Emitter Count",
+      "type": "slider",
+      "description": "",
+      "min": "1",
+      "max": "8",
+      "default": "3"
+    },
+    {
+      "index": 2,
+      "name": "Min Speed",
+      "type": "slider",
+      "description": "",
+      "min": "2",
+      "max": "10",
+      "default": "2"
+    },
+    {
+      "index": 3,
+      "name": "Max Speed",
+      "type": "slider",
+      "description": "",
+      "min": "2",
+      "max": "20",
+      "default": "4"
+    },
+    {
+      "index": 4,
+      "name": "Min Delay",
+      "type": "slider",
+      "description": "",
+      "min": "3",
+      "max": "20",
+      "default": "5"
+    },
+    {
+      "index": 5,
+      "name": "Max Delay",
+      "type": "slider",
+      "description": "",
+      "min": "10",
+      "max": "50",
+      "default": "30"
+    }
+  ]
+}
