@@ -1,45 +1,31 @@
 /* global planck, createCanvas, beginShape, endShape, push, pop, height,
    translate, rotate, fill, stroke, rectMode, CENTER, rect, vertex, clear,
    strokeWeight, noStroke, frameRate, ellipse, arc, radians, frameCount, random,
-   fullscreen, pixelDensity */
+   fullscreen, pixelDensity, color */
+
 
 var pl = planck, Vec2 = pl.Vec2;
 let FRAME_RATE = 30;
 
-var lastImpulse = 0;
-var nextImpulse = 0;
 
-var lastWind = 0;
-var nextWind = 0;
-
+// define how many segments the body will have, and their dimensions
 var SEGMENTS = 10;
-var HEIGHT = 1;
+var HEIGHT = 0.95;
 var WIDTH = 0.7;
 
+// arms get their own definitions
 var ARM_WIDTH = 0.3;
 var ARM_HEIGHT = 0.2;
 var ARM_OFFSET = 1.8;
 var step = HEIGHT * 2;
 
+let armStep = ARM_WIDTH * 2;
+let ARM_JOINT_COUNT = 6;
+let ARM_JOINT_OFFSET = 1.0;
+
+// assorted shape objects
 var shape = pl.Box(WIDTH, HEIGHT);
-var headShape = pl.Box(WIDTH, HEIGHT*2);
 var arm = pl.Box(ARM_WIDTH, ARM_HEIGHT);
-
-let MAX_FORCE = 500;
-
-var mulVec2 = function(a, b) {
-  var x = (a.q.c * b.x - a.q.s * b.y) + a.p.x;
-  var y = (a.q.s * b.x + a.q.c * b.y) + a.p.y;
-  return {x:x, y:y};
-};
-
-function toScreen(p) {
-  let x = (p.x + offsetX) * meterToPixel; //( (0m) +  8.0m )* 50 = 400 pixels
-  let y = height - (p.y + offsetY) * meterToPixel; //( (0m) +  8.0m )* 50 = 400 pixels
-  
-  return { x:x, y:y };
-}
-
 
 var bodySegmentDef = {
   density: 1.0,
@@ -50,11 +36,6 @@ var bodyJointDef = {
   collideConnected: false
 };
 
-var world, ground;
-
-var points = [];
-var head;
-var torso;
 
 var armJoint = {
   enableLimit: true,
@@ -69,28 +50,67 @@ let armFixtureDef = {
 };
 
 
-let armStep = ARM_WIDTH * 2;
-let ARM_JOINT_COUNT = 6;
-let ARM_JOINT_OFFSET = 1.0;
+
+// we'll apply some random forces to the body, let's track when that happens
+var lastImpulse = 0;
+var nextImpulse = 0;
+var lastWind = 0;
+var nextWind = 0;
+
+var minWind = -6.0;
+var maxWind = 6.0;
+
+
+// slightly tweakable gravity
+var minGravity = 4.0;
+var maxGravity = 16.0;
+
+
+// max applyable force
+let MAX_FORCE = 500;
+
+
+var mulVec2 = function(a, b) {
+  var x = (a.q.c * b.x - a.q.s * b.y) + a.p.x;
+  var y = (a.q.s * b.x + a.q.c * b.y) + a.p.y;
+  return {x:x, y:y};
+};
+
+// convert plank/box2d point to screen coordinates
+function toScreen(p) {
+  let x = (p.x + offsetX) * meterToPixel; //( (0m) +  8.0m )* 50 = 400 pixels
+  let y = height - (p.y + offsetY) * meterToPixel; //( (0m) +  8.0m )* 50 = 400 pixels
+  
+  return { x:x, y:y };
+}
+
+// hold onto assorted objects in the simulation
+var world, ground;
+var points = [];
+var head;
+var torso;
 
 var rightArmPoints = [];
 var leftArmPoints = [];
 
-let meterToPixel = 40.0; //50 pixels to a meter
 
-// x offset in meters (400/50 = 8). This will put the 0 x-coordinate in the middle of the screen horizontally.
+// assorted values we need to draw things
+let meterToPixel = 40.0;
 let offsetX; 
 let offsetY;
+
+let MARGIN = 0;
 
 var headWidth = WIDTH * 2 * meterToPixel;
 var headHeight = HEIGHT * 2 * meterToPixel;
 var eyeWidth = headWidth * 0.25;
-var eyeHeight = eyeWidth;
+var eyeHeight = eyeWidth * 1.3;
 var eyeXOffset = headWidth * 0.25;
-var eyeYOffset = 10;
+var eyeYOffset = 20;
+var eyePupilYOffset = 3;
 
 var mouthXOffset = headWidth / 2;
-var mouthYOffset = 30;
+var mouthYOffset = 50;
 var mouthWidth = headWidth * 0.7;
 var mouthHeight = headHeight / 7;
 
@@ -99,27 +119,27 @@ var bodyYOffset;
 var bodyColor;
 
 
-let MARGIN = 0;
-
-var minWind = -6.0;
-var maxWind = 6.0;
-
-var minGravity = 4.0;
-var maxGravity = 16.0;
-
-var nextGravity = 0;
-var lastGravity = 0;
-
+/**
+ * generate our body segments, and chain them together
+ */
 function setupBody() {
+  // start at the ground
   var last = ground;
+
   var bodyOffset = -offsetY + bodyYOffset;
 
   for ( var i = 0; i < SEGMENTS; i++ ) {
     var anchor, db;
+    var def = bodySegmentDef;
+
+    if ( i == SEGMENTS - 1 ) {
+      def.density = 0.5;
+    }
+
     db = world.createDynamicBody(Vec2(bodyXOffset, bodyOffset + (i * step) ));
     db.createFixture(shape, bodySegmentDef);
 
-    // put the anchor right between the two segments we are joining
+    // put the anchor right between the two segments we are joining, attached to the last object
     var anchor = Vec2(bodyXOffset, bodyOffset + (i * step) - step/2);
     world.createJoint(pl.RevoluteJoint(bodyJointDef, last, db, anchor));
     
@@ -135,10 +155,17 @@ function setupBody() {
   torso = points[SEGMENTS-random([2, 3])];
 }
 
+/**
+ * setup the arm objects
+ */
+
 function setupArms() {
+
+  // start from the torso
   var last = torso;
   var p, anchor, db;
-  
+
+  // setup right arm
   for ( var i = 0; i < ARM_JOINT_COUNT; i++ ) {
     p = last.getPosition();
     db = world.createDynamicBody(Vec2(bodyXOffset + i, p.y));
@@ -151,6 +178,7 @@ function setupArms() {
     rightArmPoints.push(db);
   }
 
+  // setup left arm
   last = torso;
   for ( var i = 0; i < ARM_JOINT_COUNT; i++ ) {
     p = last.getPosition();
@@ -165,6 +193,9 @@ function setupArms() {
   }
 }
 
+/**
+ * handle drawing the face
+ */
 function drawFace(head) {
   var f = head.getFixtureList();
   var a = f.m_body.getAngle(); 
@@ -187,6 +218,9 @@ function drawFace(head) {
   drawMouth(p, a);
 }
 
+/**
+ * draw an eye!
+ */
 function drawEye(p, a, mult) {
   push();
   translate(p.x,p.y);
@@ -204,11 +238,14 @@ function drawEye(p, a, mult) {
 
   // pupil!
   fill(0);
-  ellipse(eyeXOffset * mult, eyeYOffset + 1, eyeWidth * 0.5, eyeHeight * 0.5);
+  ellipse(eyeXOffset * mult, eyeYOffset + eyePupilYOffset, eyeWidth * 0.5, eyeHeight * 0.5);
   pop();
 }
 
 
+/**
+ * draw the mouth
+ */
 function drawMouth(p, a) {
   push();
   translate(p.x,p.y);
@@ -221,12 +258,17 @@ function drawMouth(p, a) {
   pop();
 }
 
-
+/**
+ * handle drawing the body. to actually draw things, we collect the vertices of
+ * each segment in the body as a collection of points, then draw a polygon connecting
+ * those points. this is a little smoother than just drawing every box
+ */
 function drawBody() {
   fill(bodyColor);
   stroke(bodyColor);
   strokeWeight(3);
 
+  // collect the points
   let leftSide = [];
   let rightSide = [];
   for ( var i = 0; i < points.length; i++) {
@@ -274,6 +316,11 @@ function drawBody() {
 
 }
 
+/**
+ * draw an arm. this is basically the same idea as
+ * drawing the body -- collect a bunch of points, and
+ * draw a polygon
+ */
 function drawArm(points, flip) {
 
   let topSide = [];
@@ -328,10 +375,30 @@ function drawArm(points, flip) {
 
 
 /**
- * p5.js setup
+ * setup p5.js stuff. we'll call this from the actual
+ * setup function, or when the user clicks the fullscreen button
  */
-function init() {
-  var c;
+function setup() {
+  // lightly modified from https://github.com/mrmrs/colors
+  let colorPalette = [
+    color(0,31,63),
+    color(0,116,217),
+    color(127,219,255),
+    color(57,204,204),
+    color(61,153,112),
+    color(46,204,64),
+    color(1,255,112),
+    color(255,220,0),
+    color(255,133,27),    
+    color(255,65,54),
+    color(240,18,190),
+    color(177,13,201),
+    color(133,20,75),
+    color(255, 0, 0),
+    color(0, 255, 0),
+    color(0, 0, 255),
+  ];
+
   // find the sketch holder in the HTML output
   var wrapper = document.querySelector('#sketch');
 
@@ -363,25 +430,6 @@ function init() {
   // to put Box2d's (0,0) right in the middle of the screen
   offsetX = w / 2 / meterToPixel;
   offsetY = h / 2 / meterToPixel;
-
-  let colorPalette = [
-    color(0,31,63),
-    color(0,116,217),
-    color(127,219,255),
-    color(57,204,204),
-    color(61,153,112),
-    color(46,204,64),
-    color(1,255,112),
-    color(255,220,0),
-    color(255,133,27),    
-    color(255,65,54),
-    color(240,18,190),
-    color(177,13,201),
-    color(133,20,75),
-    color(255, 0, 0),
-    color(0, 255, 0),
-    color(0, 0, 255),
-  ];
   
   bodyColor = random(colorPalette);
   
@@ -396,20 +444,28 @@ function init() {
   ground = world.createBody();
   ground.createFixture(pl.Edge(Vec2(-40.0, -offsetY), Vec2(40.0, -offsetY)), 0.0);
 
+  // reset arrays holding our assorted objects
+  rightArmPoints = [];
+  leftArmPoints = [];
+  points = [];
+
+  
   setupBody();
   setupArms();
 }
 
-function setup() {
-  init();
-}
 
+
+/**
+ * do the work!
+ */
 function draw() {
   clear();
 
-  // in each frame call world.step(timeStep) with fixed timeStep
+  // update planck.js world
   world.step(1 / FRAME_RATE);
 
+  // check for wind gust
   if ( frameCount >= nextWind ) {
     //console.log("whoosh!");
     var g = world.getGravity();
@@ -419,15 +475,17 @@ function draw() {
     nextWind = lastWind + random(FRAME_RATE * 10, FRAME_RATE * 20);
   }
 
+  // check for random force
   if ( frameCount >= nextImpulse ) {
-    //console.log("bonk!");
+    // console.log("bonk!");
     lastImpulse = frameCount;
     nextImpulse = lastImpulse + random(20, 100);
-    var body = random(points);
+    var body = random(points.slice(0, points.length));
     var position = body.getPosition();
     body.applyForce(Vec2(random(-MAX_FORCE, MAX_FORCE), 0), position, false);
   }
 
+  // draw things!
   drawBody();  
   drawArm(leftArmPoints);
   drawArm(rightArmPoints, true);
