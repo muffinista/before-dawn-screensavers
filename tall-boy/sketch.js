@@ -381,7 +381,7 @@ function drawArm(points, flip) {
 function setup() {
   // lightly modified from https://github.com/mrmrs/colors
   let colorPalette = [
-    color(0,31,63),
+//    color(0,31,63),
     color(0,116,217),
     color(127,219,255),
     color(57,204,204),
