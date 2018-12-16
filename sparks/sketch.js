@@ -37,8 +37,9 @@ var Spark = function() {
   }; 
 
   this.dead = function() {
-    return ( this.v.x + deathPadding <= 0 || this.v.x >= width + deathPadding ||
-             this.v.y + deathPadding <= 0 || this.v.y >= height + deathPadding );
+    return ( this.p.x + deathPadding <= 0 ||
+      this.p.x >= width + deathPadding ||
+      this.p.y >= height + deathPadding );
   }
 }
 
