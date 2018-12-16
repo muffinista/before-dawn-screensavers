@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Quasicrystals</title>
+    <script src="p5.min.js"></script> 
+    <script src="Tween.js"></script>
+    <script src="sketch.js"></script>
+
+    <style>
+     body {
+       width: 100%;
+     }
+    </style>
+    <script>
+     // load any incoming URL parameters. you could just use the
+     // URLSearchParams object directly to manage these variables, but
+     // having them in a hash is a little easier sometimes.
+     var tmpParams = new URLSearchParams(document.location.search);
+     window.urlParams = {};
+
+     for(let k of tmpParams.keys() ) {
+       window.urlParams[k] = tmpParams.get(k);
+     }
+
+//     console.log(window.urlParams);
+    </script>
+  </head>
+  <body>
+    <div id="sketch">
+    </div>
+  </body>
+</html>

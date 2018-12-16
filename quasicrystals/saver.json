@@ -1,0 +1,37 @@
+{
+  "name": "Quasicrystals",
+  "description": "Quasicrystals",
+  "aboutUrl": "https://muffinlabs.com/",
+  "author": "Colin Mitchell",
+  "source": "index.html",
+  "requirements": [],
+  "options": [
+    {
+      "index": 1,
+      "name": "Quality",
+      "type": "slider",
+      "description": "Graphics Quality",
+      "min": "1",
+      "max": "100",
+      "default": "50"
+    },
+    {
+      "index": 2,
+      "name": "Frequency",
+      "type": "slider",
+      "description": "Frequency",
+      "min": "1",
+      "max": "100",
+      "default": "75"
+    },
+    {
+      "index": 3,
+      "name": "Wiggle",
+      "type": "slider",
+      "description": "Wiggle",
+      "min": "1",
+      "max": "100",
+      "default": "75"
+    }
+  ]
+}
