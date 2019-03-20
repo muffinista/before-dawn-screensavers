@@ -8,7 +8,7 @@
          CSS gradients: https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Images/Using_CSS_gradients
          Tween.js: https://github.com/tweenjs/tween.js/blob/master/docs/user_guide.md
 
-       -->
+    -->
     <script src="./Tween.js"></script>
 
     <style>
@@ -46,15 +46,6 @@
      //
      // turn incoming RGBa vals into a CSS rgba() string
      //
-     var dddtoColor = function(r, g, b, a) {
-       r = Math.trunc(r);
-       g = Math.trunc(g);
-       b = Math.trunc(b);
-
-       return `rgba(${r},${g},${b},${a})`;
-     }
-
-//     var toColor = (r,g,b,a) => `rgba(${Math.trunc(r)},${Math.trunc(g)},${Math.trunc(b)},${a})`;
      var toColor = (r,g,b,a) => `rgba(${r|0},${g|0},${b|0},${a})`;     
 
      //
@@ -160,15 +151,6 @@
 
        requestAnimationFrame(animate);
      }
-
-     /*     var g= gradient();
-        var t0 = performance.now();
-        for(var i = 0; i < 10000000; i++ ) {
-        toColor(g.r1, g.g1, g.b1, g.a1);
-        }
-        var t1 = performance.now();     
-        console.log("Call took " + (t1 - t0) + " milliseconds.");
-      */   
     </script>
   </body>
 </html>

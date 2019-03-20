@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>My Awesome Screensaver</title>
+
+    <script src="./Tween.js"></script>
+
+    <style>
+     * {
+       padding: 0;
+       margin: 0;
+     }
+    </style>
+
+    <script>
+     // load any incoming URL parameters. you could just use the
+     // URLSearchParams object directly to manage these variables, but
+     // having them in a hash is a little easier sometimes.
+     var tmpParams = new URLSearchParams(document.location.search);
+     window.urlParams = {};
+
+     for(let k of tmpParams.keys() ) {
+       window.urlParams[k] = tmpParams.get(k);
+     }
+    </script>
+  </head>
+  <body>
+    <img id="screen" />
+
+    <script>
+     var minTweenDuration = Math.random() * 2000;     
+     var maxTweenDuration = minTweenDuration + Math.random() * 2500;
+     
+     var minSleepDuration = Math.random() * 1000;     
+     var maxSleepDuration = minSleepDuration + Math.random() * 8000;
+
+     var url = unescape(decodeURIComponent(window.urlParams.screenshot));
+
+     var img = document.getElementById("screen");
+     img.src = url;
+     
+     if ( typeof(window.urlParams.width) !== "undefined" ) {
+       img.width = parseInt(window.urlParams.width, 10);
+       img.height = parseInt(window.urlParams.height, 10);
+     }
+
+     var getRandomInt = function(min, max) {
+       min = Math.ceil(min);
+       max = Math.floor(max);
+       return Math.floor(Math.random() * (max - min + 1)) + min;
+     }
+     
+     var tweens = {
+       'hue': {
+         name: 'hue',
+         base: 0,
+         min: 0,
+         max: 360,
+         value: 0
+       }
+     };
+
+     
+     var updateValues = function(obj) {
+       tweens[obj.name] = obj;
+     };
+     
+     var setupTween = function() {
+       var name = 'hue';
+       var duration = getRandomInt(minTweenDuration, maxTweenDuration);
+       var sleep = getRandomInt(minSleepDuration, maxSleepDuration);
+       var src = tweens[name];
+       var value = getRandomInt(src.min, src.max);
+
+       console.log(name, duration, sleep, value);
+       
+       var dest = {
+         name: name,
+         base: src.base,
+         value: value
+       }
+       
+       tween = new TWEEN.Tween(src)
+                        .to(dest, duration)
+                        .easing(TWEEN.Easing.Quadratic.Out)
+                        .onUpdate(updateValues)
+                        .onComplete(function() {
+                          setTimeout(function() {
+                            setupTween(name).start();
+                          }, sleep);
+                        });
+       return tween;
+     };
+
+     
+     var redraw = function() {
+       var css = `hue-rotate(${tweens.hue.value}deg)`;
+       img.style.filter = css;
+     };
+
+     setupTween().start();
+
+     // Setup the animation loop.
+     function animate(time) {
+       TWEEN.update(time);
+       redraw();
+       requestAnimationFrame(animate);
+     }
+
+     animate();
+    </script>
+  </body>
+</html>

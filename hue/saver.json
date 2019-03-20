@@ -1,0 +1,12 @@
+{
+  "name": "Hues",
+  "description": "Rotate the hue of the screen",
+  "aboutUrl": "https://muffinlabs.com/",
+  "author": "Colin Mitchell",
+  "source": "index.html",
+  "options": [
+  ],
+  "requirements": [
+    "screen"
+  ]
+}
