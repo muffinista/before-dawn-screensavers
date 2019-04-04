@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>My Awesome Screensaver</title>
+    <style>
+     body {
+       width: 100%;
+     }
+    </style>
+    <script>
+     // load any incoming URL parameters. you could just use the
+     // URLSearchParams object directly to manage these variables, but
+     // having them in a hash is a little easier sometimes.
+     var tmpParams = new URLSearchParams(document.location.search);
+     window.urlParams = {};
+
+     for(let k of tmpParams.keys() ) {
+       window.urlParams[k] = tmpParams.get(k);
+     }
+    </script>
+    <script language="javascript" type="text/javascript" src="./p5.min.js"></script>
+    <script language="javascript" type="text/javascript" src="./sketch.js"></script>
+    </head>
+  <body>
+  </body>
+</html>
