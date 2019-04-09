@@ -1,23 +1,55 @@
-let clouds = [];
 const MAX_CLOUDS = 10;
+const MAX_WAVES = 6;
+
+let clouds = [];
+let waveLayers = [];
+let waveSpeed = 1;
+let waveWidth = 160;
 
 function setup() {
-  createCanvas(640, 480);
+  createCanvas(720, 480);
+  frameRate(30);
+
   for ( let i = 0; i < MAX_CLOUDS; i++ ) {
     addCloud();
   }
+
+  waveLayers = [[], [], [], []];
+  for ( let i = 0; i < MAX_WAVES; i++ ) {
+    addWave(0, i);
+  }
+  for ( let i = 0; i < MAX_WAVES; i++ ) {
+    addWave(1, i);
+  }
+  for ( let i = 0; i < MAX_WAVES; i++ ) {
+    addWave(2, i, waveWidth / 2);
+  }
+  for ( let i = 0; i < MAX_WAVES; i++ ) {
+    addWave(3, i, waveWidth / 2);
+  }
+
 }
 
 function draw() {
-  // put drawing code here
-  background(0, 0, 255);
+  let i;
 
+  // put drawing code here
+  background(128, 128, 255);
+
+  drawClouds();
+  drawWaveLayer(3);
+  drawWaveLayer(2);
+  drawWaveLayer(1);
+  drawWaveLayer(0);
+}
+
+function drawClouds() {
   let i = clouds.length;
   while (i--) {
     let c = clouds[i];
     if ( c.dead ) {
       clouds.splice(i, 1);
-      addCloud();
+      addCloud(0);
     }
     else {
       c.draw();
@@ -26,12 +58,61 @@ function draw() {
   }
 }
 
-function addCloud() {
+function drawWaveLayer(index) {
+  i = waveLayers[index].length;
+  while (i--) {
+    let w = waveLayers[index][i];
+    if ( w.dead ) {
+      waveLayers[index].splice(i, 1);
+      addWave(index);
+    }
+    else {
+      w.draw();
+      w.move();
+    }
+  }
+}
+
+function addCloud(x) {
   let size = 1;
-  let x = 0;
+  if ( x === undefined ) {
+    x = random(0, width);
+  }
   let y = random(-10, height * 0.25);
-  let speed = random() * 1.2;
+  let speed = random() * 0.8;
   clouds.push(new Cloud(x, y, size, speed));
+}
+
+function addWave(layer, offset, wiggle) {
+  let size = 1;
+  let y = height;
+  let speed = waveSpeed;
+  let x = -waveWidth;
+  if ( wiggle === undefined ) {
+    wiggle = 0;
+  }
+
+  let offsetY = layer * 10;
+  y = y - offsetY;
+
+  if ( offset !== undefined ) {
+    x = width - offset * waveWidth;
+  }
+
+  if ( layer % 2 == 1 ) {
+    speed *= -1;
+    x = width + waveWidth/2;
+
+    if ( offset !== undefined ) {
+      x = width - offset * waveWidth;
+    }
+  
+    // 
+    // width - (i * waveWidth) - waveWidth / 2
+  }
+
+  x = x + wiggle;
+  waveLayers[layer].push(new Wave(x, y, size, speed));
 }
 
 class Cloud {
@@ -60,6 +141,7 @@ class Cloud {
     this.sprite = createGraphics(300, 300);
     this.sprite.fill(255);
     this.sprite.stroke(255);
+    this.x = this.x - this.sprite.width;
   
     for ( let i = 0; i < segmentX.length; i++ ) {
       let x = segmentX[i] + 20;
@@ -76,8 +158,7 @@ class Cloud {
   }
 
   draw() {
-    tint(255, 240);
-    image(this.sprite, this.x, this.y);
+    image(this.sprite, this.x, this.y, 600, 600);
   }
 
   move() {
@@ -90,6 +171,52 @@ class Cloud {
   }
 
   get dead() {
-    return this.x > width;
+    if ( this.speed > 0 ) {
+      return this.x > width;
+    }
+
+    return this.x < -this.sprite.width;
+  }
+}
+
+
+class Wave {
+  constructor(x, y, size, speed) {
+    this.x = x;
+    this.y = y;
+    this.width = waveWidth;
+    this.size = size;
+    this.speed = speed;
+  }
+
+  draw() {
+    let y = this.y + sin(this.x/15) * 1.75;
+
+    fill(0, 0, 255);
+
+    arc(this.x, y, this.width + 5, this.width + 5, PI, 0);
+    noFill();
+    stroke(0);
+    const lines = [160, 120, 80, 40];
+    for ( var i = 0; i < lines.length; i++ )  {
+      arc(this.x, y, lines[i] + 5, lines[i] + 5, PI, 0);
+    }
+  }
+
+  move() {
+    this.x = this.x + this.speed;
+  }
+
+  setPos(x, y) {
+    this.x = x;
+    this.y = y;
+  }
+
+  get dead() {
+    if ( this.speed > 0 ) {
+      return this.x - this.width/2 > width;
+    }
+
+    return this.x < -this.width;
   }
 }
