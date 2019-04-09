@@ -124,7 +124,8 @@ class Cloud {
     this.drawBottom = true;
     this.segmentWidth = 35;
 
-    let segmentX = [0, 10, 25, 40];
+    let offsetX =  20;
+    let segmentX = [0 + offsetX, 10 + offsetX, 25 + offsetX, 40 + offsetX];
     let topOffsets = [
       random(15, 25),
       random(25, 45),
@@ -137,28 +138,35 @@ class Cloud {
       random(25, 55),
       random(15, 30)
     ];
+    let baseY = 35;
+    let maxBottom = max(bottomOffsets);
 
-    this.sprite = createGraphics(300, 300);
+    let expectedWidth = (this.segmentWidth * segmentX.length) + segmentX[0];
+    let expectedHeight = baseY + maxBottom;
+
+    this.renderWidth = expectedWidth * this.size;
+    this.renderHeight = expectedHeight * this.size;
+
+    this.sprite = createGraphics(expectedWidth + 1, expectedHeight + 1);
     this.sprite.fill(255);
     this.sprite.stroke(255);
     this.x = this.x - this.sprite.width;
   
     for ( let i = 0; i < segmentX.length; i++ ) {
-      let x = segmentX[i] + 20;
-      let y = 35;
+      let x = segmentX[i];
       let offset = topOffsets[i];
 
-      this.sprite.arc(x, y, this.segmentWidth * this.size, offset * this.size, PI, TWO_PI);
+      this.sprite.arc(x, baseY, this.segmentWidth, offset, PI, TWO_PI);
       
       if ( this.drawBottom ) {
         let bottomOffset = bottomOffsets[i];
-        this.sprite.arc(x, y - 1, this.segmentWidth * this.size, bottomOffset * this.size, 0, PI);
+        this.sprite.arc(x, baseY - 1, this.segmentWidth, bottomOffset, 0, PI);
       }  
     }
   }
 
   draw() {
-    image(this.sprite, this.x, this.y, 600, 600);
+    image(this.sprite, this.x, this.y, this.renderWidth, this.renderHeight);
   }
 
   move() {
