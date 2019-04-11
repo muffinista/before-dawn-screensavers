@@ -1,46 +1,62 @@
-const MAX_CLOUDS = 10;
-const MAX_WAVES = 6;
+const MAX_CLOUDS = 6;
+
+const WAVE_DIP = 20;
+const WAVE_AMPLITUDE = 2.75;
+const WAVE_CYCLES = 8;
+const WAVE_LAYER_COUNT = 4;
+const CLOUD_AREA = 0.25;
+const CLOUD_SIZE = 2;
+const CLOUD_GREY = 255;
 
 let clouds = [];
 let waveLayers = [];
 let waveSpeed = 1;
-let waveWidth = 160;
+let waveWidth = 120;
+let waveHeight = 80;
+let waveCount = 6;
 
 function setup() {
   createCanvas(720, 480);
   frameRate(30);
 
+  waveCount = (width / waveWidth) + 2;
+  waveLayers = [];
+
+
   for ( let i = 0; i < MAX_CLOUDS; i++ ) {
     addCloud();
   }
 
-  waveLayers = [[], [], [], []];
-  for ( let i = 0; i < MAX_WAVES; i++ ) {
-    addWave(0, i);
+  for ( let i = 0; i < WAVE_LAYER_COUNT; i++ ) {
+    waveLayers.push([]);
   }
-  for ( let i = 0; i < MAX_WAVES; i++ ) {
-    addWave(1, i);
-  }
-  for ( let i = 0; i < MAX_WAVES; i++ ) {
-    addWave(2, i, waveWidth / 2);
-  }
-  for ( let i = 0; i < MAX_WAVES; i++ ) {
-    addWave(3, i, waveWidth / 2);
+  for ( let i = 0; i < WAVE_LAYER_COUNT; i++ ) {
+    for ( let j = 0; j < waveCount; j++ ) {
+      addWave(i, j, waveWidth * i * 0.25);
+    }
   }
 
+  // for ( let i = 0; i < waveCount; i++ ) {
+  //   addWave(0, i);
+  // }
+  // for ( let i = 0; i < waveCount; i++ ) {
+  //   addWave(1, i);
+  // }
+  // for ( let i = 0; i < waveCount; i++ ) {
+  //   addWave(2, i, waveWidth / 2);
+  // }
+  // for ( let i = 0; i < waveCount; i++ ) {
+  //   addWave(3, i, waveWidth / 2);
+  // }
 }
 
 function draw() {
-  let i;
-
-  // put drawing code here
   background(128, 128, 255);
 
   drawClouds();
-  drawWaveLayer(3);
-  drawWaveLayer(2);
-  drawWaveLayer(1);
-  drawWaveLayer(0);
+  for ( let i = WAVE_LAYER_COUNT - 1; i >= 0; i-- ) {
+    drawWaveLayer(i);
+  }
 }
 
 function drawClouds() {
@@ -74,18 +90,16 @@ function drawWaveLayer(index) {
 }
 
 function addCloud(x) {
-  let size = 1;
   if ( x === undefined ) {
     x = random(0, width);
   }
-  let y = random(-10, height * 0.25);
+  let y = random(-20, height * CLOUD_AREA);
   let speed = random() * 0.8;
-  clouds.push(new Cloud(x, y, size, speed));
+  clouds.push(new Cloud(x, y, CLOUD_SIZE, speed));
 }
 
 function addWave(layer, offset, wiggle) {
-  let size = 1;
-  let y = height;
+  let y = height + WAVE_DIP;
   let speed = waveSpeed;
   let x = -waveWidth;
   if ( wiggle === undefined ) {
@@ -106,13 +120,10 @@ function addWave(layer, offset, wiggle) {
     if ( offset !== undefined ) {
       x = width - offset * waveWidth;
     }
-  
-    // 
-    // width - (i * waveWidth) - waveWidth / 2
   }
 
   x = x + wiggle;
-  waveLayers[layer].push(new Wave(x, y, size, speed));
+  waveLayers[layer].push(new Wave(x, y, speed));
 }
 
 class Cloud {
@@ -173,11 +184,6 @@ class Cloud {
     this.x = this.x + this.speed;
   }
 
-  setPos(x, y) {
-    this.x = x;
-    this.y = y;
-  }
-
   get dead() {
     if ( this.speed > 0 ) {
       return this.x > width;
@@ -187,37 +193,34 @@ class Cloud {
   }
 }
 
-
 class Wave {
-  constructor(x, y, size, speed) {
+  constructor(x, y, speed) {
     this.x = x;
     this.y = y;
     this.width = waveWidth;
-    this.size = size;
+    this.height = waveHeight;
     this.speed = speed;
   }
 
   draw() {
-    let y = this.y + sin(this.x/15) * 1.75;
+    const lines = [1.0, 0.75, 0.5, 0.25];
 
+    let a = lerp(0, TWO_PI * WAVE_CYCLES, this.x/width);
+    let y = this.y + sin(a) * WAVE_AMPLITUDE;
     fill(0, 0, 255);
 
-    arc(this.x, y, this.width + 5, this.width + 5, PI, 0);
+    arc(this.x, y, this.width + 5, this.height + 5, PI, 0);
     noFill();
     stroke(0);
-    const lines = [160, 120, 80, 40];
+
     for ( var i = 0; i < lines.length; i++ )  {
-      arc(this.x, y, lines[i] + 5, lines[i] + 5, PI, 0);
+      arc(this.x, y, this.width * lines[i] + 5, this.height * lines[i] + 5, PI, 0);
+      // arc(this.x, y, lines[i] + 5, lines[i] + 5, PI, 0);
     }
   }
 
   move() {
     this.x = this.x + this.speed;
-  }
-
-  setPos(x, y) {
-    this.x = x;
-    this.y = y;
   }
 
   get dead() {
