@@ -1,7 +1,7 @@
 
-xxxxx:w{
-  "name": "Clouds",
-  "description": "Clouds on your screen",
+{
+  "name": "Clouds and Waves",
+  "description": "Clouds and Waves on your screen",
   "aboutUrl": "https://muffinlabs.com/",
   "author": "Colin Mitchell",
   "source": "index.html",

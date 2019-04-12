@@ -4,6 +4,8 @@ const WAVE_DIP = 20;
 const WAVE_AMPLITUDE = 2.75;
 const WAVE_CYCLES = 8;
 const WAVE_LAYER_COUNT = 4;
+const WAVE_OVERLAP = 15;
+
 const CLOUD_AREA = 0.25;
 const CLOUD_SIZE = 2;
 const CLOUD_GREY = 255;
@@ -15,9 +17,32 @@ let waveWidth = 120;
 let waveHeight = 80;
 let waveCount = 6;
 
+let waveColor;
+let waveStroke;
+
+let backgroundColor;
+
 function setup() {
-  createCanvas(720, 480);
+  // figure out the screen dimensions
+  if ( typeof(window.urlParams) !== "undefined" ) {
+    w = window.urlParams.width;
+    h = window.urlParams.height;
+  }
+  else {
+    w = screen.width;
+    h = screen.height;
+  }
+
+  // note -- if you don't do this, width/height will be strings!
+  w = parseInt(w, 10);
+  h = parseInt(h, 10);
+
+  createCanvas(w, h);
   frameRate(30);
+
+  backgroundColor = color(128, 128, 255);
+  waveColor = color(0, 0, 255);
+  waveStroke = color(0);
 
   waveCount = (width / waveWidth) + 2;
   waveLayers = [];
@@ -35,23 +60,10 @@ function setup() {
       addWave(i, j, waveWidth * i * 0.25);
     }
   }
-
-  // for ( let i = 0; i < waveCount; i++ ) {
-  //   addWave(0, i);
-  // }
-  // for ( let i = 0; i < waveCount; i++ ) {
-  //   addWave(1, i);
-  // }
-  // for ( let i = 0; i < waveCount; i++ ) {
-  //   addWave(2, i, waveWidth / 2);
-  // }
-  // for ( let i = 0; i < waveCount; i++ ) {
-  //   addWave(3, i, waveWidth / 2);
-  // }
 }
 
 function draw() {
-  background(128, 128, 255);
+  background(backgroundColor);
 
   drawClouds();
   for ( let i = WAVE_LAYER_COUNT - 1; i >= 0; i-- ) {
@@ -93,8 +105,8 @@ function addCloud(x) {
   if ( x === undefined ) {
     x = random(0, width);
   }
-  let y = random(-20, height * CLOUD_AREA);
-  let speed = random() * 0.8;
+  let y = random(-60, height * CLOUD_AREA);
+  let speed = 0.2 + random() * 0.8;
   clouds.push(new Cloud(x, y, CLOUD_SIZE, speed));
 }
 
@@ -135,17 +147,17 @@ class Cloud {
     this.drawBottom = true;
     this.segmentWidth = 35;
 
-    let offsetX =  20;
+    let offsetX = this.segmentWidth;
     let segmentX = [0 + offsetX, 10 + offsetX, 25 + offsetX, 40 + offsetX];
     let topOffsets = [
-      random(15, 25),
-      random(25, 45),
+      random(15, 30),
+      random(25, 55),
       random(25, 55),
       random(15, 30)
     ];
     let bottomOffsets = [
-      random(15, 25),
-      random(25, 45),
+      random(15, 30),
+      random(25, 55),
       random(25, 55),
       random(15, 30)
     ];
@@ -159,8 +171,8 @@ class Cloud {
     this.renderHeight = expectedHeight * this.size;
 
     this.sprite = createGraphics(expectedWidth + 1, expectedHeight + 1);
-    this.sprite.fill(255);
-    this.sprite.stroke(255);
+    this.sprite.fill(CLOUD_GREY);
+    this.sprite.stroke(CLOUD_GREY);
     this.x = this.x - this.sprite.width;
   
     for ( let i = 0; i < segmentX.length; i++ ) {
@@ -207,15 +219,14 @@ class Wave {
 
     let a = lerp(0, TWO_PI * WAVE_CYCLES, this.x/width);
     let y = this.y + sin(a) * WAVE_AMPLITUDE;
-    fill(0, 0, 255);
+    fill(waveColor);
 
-    arc(this.x, y, this.width + 5, this.height + 5, PI, 0);
+    arc(this.x, y, this.width + WAVE_OVERLAP, this.height, PI, 0);
     noFill();
-    stroke(0);
+    stroke(waveStroke);
 
     for ( var i = 0; i < lines.length; i++ )  {
-      arc(this.x, y, this.width * lines[i] + 5, this.height * lines[i] + 5, PI, 0);
-      // arc(this.x, y, lines[i] + 5, lines[i] + 5, PI, 0);
+      arc(this.x, y, this.width * lines[i] + WAVE_OVERLAP, this.height * lines[i], PI, 0);
     }
   }
 
