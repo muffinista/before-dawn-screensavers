@@ -4,5 +4,7 @@
   "aboutUrl": "https://muffinlabs.com/",
   "author": "Colin Mitchell",
   "source": "index.html",
-  "options": ["none"]
+  "options": [
+    "none"
+  ]
 }
