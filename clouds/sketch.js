@@ -3,7 +3,7 @@ const MAX_CLOUDS = 6;
 const WAVE_DIP = 20;
 const WAVE_AMPLITUDE = 2.75;
 const WAVE_CYCLES = 8;
-const WAVE_LAYER_COUNT = 4;
+const WAVE_LAYER_COUNT = 6;
 const WAVE_OVERLAP = 15;
 
 const CLOUD_AREA = 0.25;
