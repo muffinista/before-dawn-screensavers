@@ -40,8 +40,8 @@ function setup() {
   createCanvas(w, h);
   frameRate(30);
 
-  backgroundColor = color(128, 128, 255);
-  waveColor = color(0, 0, 255);
+  waveColor = color(128, 128, 255);
+  backgroundColor = color(80, 80, 255);
   waveStroke = color(0);
 
   waveCount = (width / waveWidth) + 2;
