@@ -6,5 +6,6 @@
   "source": "index.html",
   "requirements": [
     "none"
-  ]
+  ],
+  "options": []
 }

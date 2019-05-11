@@ -1,7 +1,7 @@
 const MAX_CLOUDS = 6;
 
 const WAVE_DIP = 20;
-const WAVE_AMPLITUDE = 2.75;
+const WAVE_AMPLITUDE = 4.75;
 const WAVE_CYCLES = 8;
 const WAVE_LAYER_COUNT = 6;
 const WAVE_OVERLAP = 15;
@@ -40,9 +40,9 @@ function setup() {
   createCanvas(w, h);
   frameRate(30);
 
-  waveColor = color(128, 128, 255);
-  backgroundColor = color(80, 80, 255);
-  waveStroke = color(0);
+  waveColor = color(64, 128, 128);
+  backgroundColor = color(100, 100, 255);
+  waveStroke = color(255);
 
   waveCount = (width / waveWidth) + 2;
   waveLayers = [];
@@ -224,6 +224,7 @@ class Wave {
     arc(this.x, y, this.width + WAVE_OVERLAP, this.height, PI, 0);
     noFill();
     stroke(waveStroke);
+    strokeWeight(2);
 
     for ( var i = 0; i < lines.length; i++ )  {
       arc(this.x, y, this.width * lines[i] + WAVE_OVERLAP, this.height * lines[i], PI, 0);
