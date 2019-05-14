@@ -1,6 +1,6 @@
 {
   "name": "before-dawn-screensavers",
-  "version": "0.9.31",
+  "version": "0.9.32",
   "description": "A package of the screensavers for Before Dawn",
   "author": "Colin Mitchell <colin@muffinlabs.com> (http://muffinlabs.com)",
   "devDependencies": {
