@@ -4,7 +4,9 @@
   "aboutUrl": "",
   "author": "Colin Mitchell",
   "source": "index.html",
-  "requirements": [],
+  "requirements": [
+    "none"
+  ],
   "options": [
     {
       "name": "density",

@@ -3,5 +3,8 @@
   "description": "Generate a pointillized copy of your screen. Adapted from a p5.js example",
   "author": "Colin Mitchell",
   "source": "index.html",
-  "aboutUrl": "http://p5js.org/examples/examples/Image_Pointillism.php"
+  "aboutUrl": "http://p5js.org/examples/examples/Image_Pointillism.php",
+  "requirements": [
+    "screen"
+  ]
 }

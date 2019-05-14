@@ -4,5 +4,8 @@
   "aboutUrl": "",
   "author": "Colin Mitchell",
   "source": "index.html",
-  "options": []
+  "options": [],
+  "requirements": [
+    "screen"
+  ]
 }

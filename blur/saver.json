@@ -6,6 +6,6 @@
   "source": "index.html",
   "options": [],
   "requirements": [
-    "none"
+    "screen"
   ]
 }

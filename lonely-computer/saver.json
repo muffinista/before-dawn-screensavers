@@ -13,5 +13,8 @@
       "max": "100",
       "default": "50"
     }
+  ],
+  "requirements": [
+    "screen"
   ]
 }

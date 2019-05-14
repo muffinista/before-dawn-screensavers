@@ -2,5 +2,8 @@
   "name": "Screen Glitcher",
   "description": "Glitch the screen",
   "author": "Colin Mitchell",
-  "source": "index.html"
+  "source": "index.html",
+  "requirements": [
+    "screen"
+  ]
 }
