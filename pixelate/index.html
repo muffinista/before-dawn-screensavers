@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Pixelate!</title>
+    <style>
+     * {
+       padding: 0;
+       margin: 0;
+     }
+     body {
+       overflow: hidden;
+     }
+     canvas {
+       display: none !important;
+       image-rendering: pixelated;
+     }
+    </style>
+    <script src="Tween.min.js"></script>
+  </head>
+  <body>
+    <img id="output" />
+  </body>
+  
+  <script>
+    // this little javascript snippet will parse any incoming URL
+    // parameters and place them in the window.urlParams object
+    window.urlParams = window.location.search.split(/[?&]/).slice(1).map(function(paramPair) {
+      return paramPair.split(/=(.+)?/).slice(0, 2);
+    }).reduce(function (obj, pairArray) {            
+      obj[pairArray[0]] = pairArray[1];
+      return obj;
+    }, {});
+
+    var url = unescape(decodeURIComponent(window.urlParams.screenshot));
+    var img = new Image();
+    var canvas = document.createElement('canvas');
+    var ctx = canvas.getContext('2d');
+    var output = document.querySelector('#output');
+
+    if ( typeof(window.urlParams.width) !== "undefined" ) {
+      canvas.width = window.urlParams.width;
+      canvas.height = window.urlParams.height;
+    }
+    
+    var minPixelAmount = 0.05;
+    var maxPixelAmount = 0.95;
+
+    var pixelate = function(cs) {
+      var w = img.width * cs;
+      var h = img.height * cs;
+
+      // shrink the image down, then expand it back up
+      ctx.drawImage(img, 0, 0, w, h);
+      ctx.drawImage(canvas, 0, 0, w, h, 0, 0, canvas.width, canvas.height);
+
+      output.src = canvas.toDataURL('image/png');
+    }
+
+    ctx.imageSmoothingEnabled = false;
+
+    // Setup the animation loop.
+    function animate(time) {
+      requestAnimationFrame(animate);
+      TWEEN.update(time);
+    }
+    requestAnimationFrame(animate);
+
+    // starting pixel chunk size -- this is unpixelated
+    var amount = { cs: 1.0 };
+
+    var tween;
+    var startTween = function() {
+      var cs = (Math.random() * (maxPixelAmount - minPixelAmount)) + minPixelAmount;
+      var length = (Math.random() * 2000) + 500;
+      tween = new TWEEN.Tween(amount)
+        .to({ cs: cs }, length)
+        .onUpdate(() => { // Called after tween.js updates 'coords'.
+          pixelate(amount.cs)
+        })
+        .onComplete(() => {
+          // reload every couple minutes
+          var delay = Math.random() * 1000 * 60;
+          setTimeout(startTween, delay);
+        })
+        .start(); // Start the tween immediately.
+    };
+
+    // kick things off
+    img.onload = startTween;
+    img.src = url;
+  </script>
+</html>

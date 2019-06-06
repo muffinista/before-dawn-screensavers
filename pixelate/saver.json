@@ -1,0 +1,12 @@
+{
+  "name": "Pixelate",
+  "description": "Turn your screen into blocky pixels",
+  "aboutUrl": "http://muffinlabs.com/",
+  "author": "Colin Mitchell",
+  "source": "index.html",
+  "options": [],
+  "requirements": [
+    "screen"
+  ],
+  "key": "pixelate"
+}
