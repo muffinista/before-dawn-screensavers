@@ -3,13 +3,13 @@ module.exports = function(grunt) {
   
   const fs = require('fs')
   const path = require('path')
-  const _ = require('lodash');
   const srcpath = ".";
 
   var getFolders = function() {
-    let folders = fs.readdirSync(srcpath).filter(file => fs.statSync(path.join(srcpath, file)).isDirectory());
-    folders = _.reject(folders, f => f === ".git" || f.match(/^__/))
-    folders = _.reject(folders, f => !fs.existsSync(path.join(srcpath, f, "saver.json")))
+    let folders = fs.readdirSync(srcpath).
+                     filter(file => fs.statSync(path.join(srcpath, file)).isDirectory()).
+                     filter(f => f !== ".git" && !f.match(/^__/)).
+                     filter(f => fs.existsSync(path.join(srcpath, f, "saver.json")))
 
     return folders;
   };
