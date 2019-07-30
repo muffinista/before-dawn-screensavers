@@ -14,7 +14,6 @@ let leafColor;
 let w = 1000;
 let h = 800;
 
-// let sun;
 let lastGrow = 0;
 let growDelay = 5;
 
@@ -23,8 +22,6 @@ let lastReset = resetDelay + 1;
 let treeCount = 3;
 
 function reset() {
-  // sun = createVector(w/2, h/2);
-
   backgroundColor = color(135, 206, 235);
   treeColor = color(83, 53, 10);
   leafColor = color(58, 95, 11);
@@ -74,10 +71,7 @@ function addTree() {
   let x = random(0, w);
   let y = h;
 
-  // get the angle to the sun from our starting point
   let base = new Particle(x, y);
-  //let angle = atan2(y - sun.y, x - sun.x);
-  //let angle = atan2(y - sun.y, x);
   let angle = -PI/2;
   trees.push(new Wood(base, MAX_LENGTH, START_THICKNESS, angle));
 }
@@ -110,7 +104,6 @@ class Wood {
     if ( ! root ) {
       this.tree = this;
       this.angle = angle;
-      //      this.angle = this.pointAtSun();
     }
     else {
       this.tree = root;
@@ -206,20 +199,6 @@ class Wood {
   addLeaf() {
     this.leaf = new Leaf(this.p2.x, this.p2.y)
   }
-
-  // rotate(t) {
-  //   this.angle += t;
-  //   this.calculateEndPoint();
-
-  //   for ( let w in this.branches ) {
-  //     this.branches[w].rotate(t);
-  //   }
-
-  //   if ( this.leaf ) {
-  //     this.leaf.x = this.p2.x;
-  //     this.leaf.y = this.p2.y;
-  //   }
-  // }
 
   // Draw the branch
   display() {
