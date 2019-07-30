@@ -1,0 +1,11 @@
+{
+  "name": "Rain",
+  "description": "Rain falling from above",
+  "aboutUrl": "http://muffinlabs.com/",
+  "author": "Colin Mitchell",
+  "source": "index.html",
+  "options": [],
+  "requirements": [
+    "none"
+  ]
+}
