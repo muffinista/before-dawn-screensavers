@@ -3,6 +3,7 @@ const MIN_LENGTH = 20;
 const MAX_LENGTH = 60;
 const START_THICKNESS = 8;
 const DRAW_MULTIPLIER = 1.5;
+const BLUR_AMOUNT = 3.0;
 
 let trees = [];
 let BRANCH_ANGLE;
@@ -34,6 +35,18 @@ function reset() {
   for ( let x = 0; x < treeCount; x++ ) {
     addTree();
   }
+  for ( x = 0; x < 10; x++ ) {
+    trees.forEach(function(t) {
+      t.grow();
+    });  
+  }
+
+  background(backgroundColor);
+
+  trees.forEach(function(t) {
+    t.display();
+  });
+  filter(BLUR, BLUR_AMOUNT);
 }
 
 function setup() {
@@ -52,19 +65,20 @@ function draw() {
     return;
   }
 
-  if ( lastGrow + growDelay < frameCount) {
-    lastGrow = frameCount;
+  // if ( lastGrow + growDelay < frameCount) {
+  //   lastGrow = frameCount;
 
-    trees.forEach(function(t) {
-      t.grow();
-    }); 
-  }
+  //   trees.forEach(function(t) {
+  //     t.grow();
+  //   }); 
+  // }
 
-  background(backgroundColor);
+  // background(backgroundColor);
 
-  trees.forEach(function(t) {
-    t.display();
-  });
+  // trees.forEach(function(t) {
+  //   t.display();
+  // });
+  // filter(BLUR, 3);
 }
 
 function addTree() {
