@@ -10,15 +10,15 @@ const PADDING = 20;
 let trees = [];
 let BRANCH_ANGLE;
 
-let treeColor;
-let leafColor;
-
 let lastGrow = 0;
 let growDelay = 5;
 
 let resetDelay = 100;
 let lastReset = resetDelay + 1;
-let treeCount = 3;
+let treeCount = 2;
+
+let w, h;
+let screenWidth, screenHeight;
 
 let treeAttributes = {
   alpha: 0
@@ -49,7 +49,7 @@ var maxColorTime = 15000;
 var minHoldTime = 5000;
 var maxHoldTime = 15000;
 
-var minTreeDelay = 10000;
+var minTreeDelay = 20000;
 var maxTreeDelay = 30000;
 
 // we'll randomly pick an easing equation for the tween
@@ -93,11 +93,7 @@ function resetColorTween() {
 }
 
 
-
 function resetTree() {
-  treeColor = color(random(20, 120), random(20, 120), random(20, 120));
-  leafColor = color(random(0, 255), random(0, 255), random(0, 255));
-
   trees = [];
   for ( let x = 0; x < treeCount; x++ ) {
     addTree();
@@ -109,15 +105,17 @@ function resetTree() {
     });  
   }
 
+  // render images for all the trees
+  trees.forEach(function(t) {
+    t.display();
+  });
+
   resetTreeTween();
 }
 function reset() {
   resetTree();
   resetColorTween();
 }
-
-let w, h;
-let screenWidth, screenHeight;
 
 function setup() {
   BRANCH_ANGLE = HALF_PI/5;
@@ -144,7 +142,7 @@ function setup() {
   h = parseInt(h, 10);
 
   createCanvas(screenWidth, screenHeight);
-  frameRate(15);
+  frameRate(10);
 
   reset();
 }
@@ -152,11 +150,11 @@ function setup() {
 function draw() {
   background(srcColor.r, srcColor.g, srcColor.b);
 
-  brightness(255);
+  // brightness(255);
   tint(255, treeAttributes.alpha);
 
   trees.forEach(function(t) {
-    t.display();
+    // t.display();
     image(t.pg, t.drawLocation.x, t.drawLocation.y);
   });
 
@@ -180,7 +178,7 @@ class Leaf extends Particle {
     this.radius = 12;
   }
 
-  display(pg) {
+  display(pg, leafColor) {
     pg.fill(leafColor);
     pg.noStroke();
     pg.ellipse(this.x, this.y, this.radius * 2, this.radius * 2);
@@ -199,6 +197,8 @@ class Wood {
       this.angle = angle;
       this.p1 = new Particle(0, 0);
       this.rootPoint = p1;
+      this.treeColor = color(random(20, 120), random(20, 120), random(20, 120));
+      this.leafColor = color(random(0, 255), random(0, 255), random(0, 255));
     }
     else {
       this.tree = root;
@@ -289,7 +289,10 @@ class Wood {
       let xMin = Math.min(...tmp.map((p) => p.x)) - PADDING;
       let xMax = Math.max(...tmp.map((p) => p.x)) + PADDING;
       let yMin = Math.min(...tmp.map((p) => p.y)) - PADDING;
-      let yMax = Math.max(...tmp.map((p) => p.y)) + PADDING;
+
+      // allow branches/leaves to go below the bottom point of the image
+      // let yMax = Math.min(Math.max(...tmp.map((p) => p.y)), this.p1.y); // + PADDING;
+      let yMax = this.p1.y; // + PADDING;
 
       this.drawWidth = xMax - xMin;
       this.drawHeight = yMax - yMin;
@@ -302,9 +305,13 @@ class Wood {
       this.drawLocation = this.rootPoint;
       this.drawLocation.x = this.drawLocation.x - this.drawWidth / 2;
       this.drawLocation.y = this.drawLocation.y - this.drawHeight;
+
+      // handy for debugging
+      // this.pg.background(255);
+      // this.pg.rect(0, 0, this.drawWidth, this.drawHeight);
     }
 
-    this.tree.pg.stroke(treeColor);
+    this.tree.pg.stroke(this.tree.treeColor);
     this.tree.pg.strokeWeight(this.size * DRAW_MULTIPLIER);
     this.tree.pg.noFill();
     this.tree.pg.line(this.p1.x, this.p1.y, this.p2.x, this.p2.y);
@@ -314,7 +321,7 @@ class Wood {
     }
 
     if ( this.leaf ) {
-      this.leaf.display(this.tree.pg);
+      this.leaf.display(this.tree.pg, this.tree.leafColor);
     }
   }
 }
