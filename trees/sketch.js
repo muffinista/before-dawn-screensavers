@@ -11,9 +11,6 @@ let BRANCH_ANGLE;
 let treeColor;
 let leafColor;
 
-let w = 1000;
-let h = 800;
-
 let lastGrow = 0;
 let growDelay = 5;
 
@@ -128,13 +125,45 @@ function reset() {
   resetColorTween();
 }
 
+let w, h;
+let screenWidth, screenHeight;
+
 function setup() {
   BRANCH_ANGLE = HALF_PI/5;
 
-  createCanvas(w, h);
-  frameRate(10);
+  // var wrapper = document.querySelector('#sketch');
+  // var w, h, c, ratio;
 
-  treeGraphics = createGraphics(width, height);
+  // LEARN FROM MY MISTAKES!!!! Set the pixel density to 1
+  // by default to handle random math issues on retina displays
+  // if you're doing direct pixel manipulation or other weird
+  // stuff. if you don't think you're going to do that, then
+  // you can remove this
+  pixelDensity(1);
+
+  if ( typeof(window.urlParams) !== "undefined" ) {
+    w = window.urlParams.width;
+    h = window.urlParams.height;
+  }
+  else {
+    w = screen.width;
+    h = screen.height;
+  }
+
+  w = 1000;
+  h = 800;
+
+  screenWidth = w;
+  screenHeight = h;
+
+  // note -- if you don't do this, width/height will be strings!
+  w = parseInt(w, 10);
+  h = parseInt(h, 10);
+
+  createCanvas(screenWidth, screenHeight);
+  frameRate(15);
+
+  treeGraphics = createGraphics(w, h);
   reset();
 }
 
@@ -143,7 +172,7 @@ function draw() {
 
   brightness(255);
   tint(255, treeAttributes.alpha);
-  image(treeGraphics, 0, 0);
+  image(treeGraphics, 0, 0, screenWidth, screenHeight);
 }
 
 function addTree() {
