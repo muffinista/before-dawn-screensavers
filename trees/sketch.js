@@ -49,6 +49,9 @@ var maxColorTime = 15000;
 var minHoldTime = 5000;
 var maxHoldTime = 15000;
 
+var minTreeDelay = 10000;
+var maxTreeDelay = 30000;
+
 // we'll randomly pick an easing equation for the tween
 // make a list of all the easing types, we'll pick one randomly
 // and we'll skip the 'none' easing which comes first in the array
@@ -57,7 +60,7 @@ var easings = [].concat.apply([],
 
 function setupTreeTween() {
   treeTween = new TWEEN.Tween(treeAttributes).to({alpha: 255}, 2500).
-    chain(new TWEEN.Tween(treeAttributes).to({alpha: 0}, 2500).delay(100000).onComplete(resetTree));
+    chain(new TWEEN.Tween(treeAttributes).to({alpha: 0}, 2500).delay(minTreeDelay).onComplete(resetTree));
 
   return treeTween;
 }
@@ -73,9 +76,6 @@ function setupColorTween() {
   srcColor.b = destColor.b;
 
   destColor = {
-    // r: random(0, 255),
-    // g: random(0, 255),
-    // b: random(0, 255),
     r: random(80, 185),
     g: random(80, 185),
     b: random(80, 185),
@@ -84,7 +84,6 @@ function setupColorTween() {
   colorTween = new TWEEN.Tween(srcColor).
                          to(destColor, random(minColorTime, maxColorTime)).
                          delay(random(minHoldTime, maxHoldTime)).
-                         //easing(random(easings)).
                          onComplete(resetColorTween);
   return colorTween;
 }
@@ -96,7 +95,6 @@ function resetColorTween() {
 
 
 function resetTree() {
-//  treeColor = color(random(0, 255), random(0, 255), random(0, 255));
   treeColor = color(random(20, 120), random(20, 120), random(20, 120));
   leafColor = color(random(0, 255), random(0, 255), random(0, 255));
 
