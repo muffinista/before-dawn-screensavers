@@ -10,12 +10,7 @@ const PADDING = 20;
 let trees = [];
 let BRANCH_ANGLE;
 
-let lastGrow = 0;
-let growDelay = 5;
-
-let resetDelay = 100;
-let lastReset = resetDelay + 1;
-let treeCount = 2;
+let treeCount = 3;
 
 let w, h;
 let screenWidth, screenHeight;
