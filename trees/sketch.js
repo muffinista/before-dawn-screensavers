@@ -5,6 +5,8 @@ const START_THICKNESS = 9;
 const DRAW_MULTIPLIER = 1.5;
 const BLUR_AMOUNT = 3.0;
 
+const PADDING = 20;
+
 let trees = [];
 let BRANCH_ANGLE;
 
@@ -17,8 +19,6 @@ let growDelay = 5;
 let resetDelay = 100;
 let lastReset = resetDelay + 1;
 let treeCount = 3;
-let treeGraphics;
-
 
 let treeAttributes = {
   alpha: 0
@@ -111,13 +111,6 @@ function resetTree() {
     });  
   }
 
-  treeGraphics.clear();
-  trees.forEach(function(t) {
-    t.display(treeGraphics);
-  });
-
-  filter(BLUR, BLUR_AMOUNT);
-
   resetTreeTween();
 }
 function reset() {
@@ -131,14 +124,6 @@ let screenWidth, screenHeight;
 function setup() {
   BRANCH_ANGLE = HALF_PI/5;
 
-  // var wrapper = document.querySelector('#sketch');
-  // var w, h, c, ratio;
-
-  // LEARN FROM MY MISTAKES!!!! Set the pixel density to 1
-  // by default to handle random math issues on retina displays
-  // if you're doing direct pixel manipulation or other weird
-  // stuff. if you don't think you're going to do that, then
-  // you can remove this
   pixelDensity(1);
 
   if ( typeof(window.urlParams) !== "undefined" ) {
@@ -163,7 +148,6 @@ function setup() {
   createCanvas(screenWidth, screenHeight);
   frameRate(15);
 
-  treeGraphics = createGraphics(w, h);
   reset();
 }
 
@@ -172,7 +156,12 @@ function draw() {
 
   brightness(255);
   tint(255, treeAttributes.alpha);
-  image(treeGraphics, 0, 0, screenWidth, screenHeight);
+
+  trees.forEach(function(t) {
+    t.display();
+    image(t.pg, t.drawLocation.x, t.drawLocation.y);
+  });
+
 }
 
 function addTree() {
@@ -202,8 +191,6 @@ class Leaf extends Particle {
 
 class Wood {
   constructor(p1, length, size, angle, root) {
-    this.p1 = p1;
-
     this.length = length;
     this.size = size;
     this.growSize = 0;
@@ -212,10 +199,13 @@ class Wood {
     if ( ! root ) {
       this.tree = this;
       this.angle = angle;
+      this.p1 = new Particle(0, 0);
+      this.rootPoint = p1;
     }
     else {
       this.tree = root;
       this.angle = this.calculateAngle(angle);
+      this.p1 = p1;
     }
 
     this.calculateEndPoint();
@@ -242,7 +232,6 @@ class Wood {
   calculateAngle(angle) {
     return angle;
   }
-
 
   calculateEndPoint() {
     let x = this.p1.x + this.length * cos(this.angle);
@@ -287,19 +276,47 @@ class Wood {
     this.leaf = new Leaf(this.p2.x, this.p2.y)
   }
 
+  allBranches() {
+    return this.branches.concat(this.branches.map((b) => b.allBranches())).flat();
+  }
+
+  points() {
+    return this.allBranches().map((b) => [b.p1, b.p2]).flat();
+  }
+
   // Draw the branch
-  display(pg) {
-    pg.stroke(treeColor);
-    pg.strokeWeight(this.size * DRAW_MULTIPLIER);
-    pg.noFill();
-    pg.line(this.p1.x, this.p1.y, this.p2.x, this.p2.y);
+  display() {
+    if ( this === this.tree && ! this.drawLocation ) {
+      let tmp = this.points();
+      let xMin = Math.min(...tmp.map((p) => p.x)) - PADDING;
+      let xMax = Math.max(...tmp.map((p) => p.x)) + PADDING;
+      let yMin = Math.min(...tmp.map((p) => p.y)) - PADDING;
+      let yMax = Math.max(...tmp.map((p) => p.y)) + PADDING;
+
+      this.drawWidth = xMax - xMin;
+      this.drawHeight = yMax - yMin;
+
+      this.pg = createGraphics(this.drawWidth, this.drawHeight);
+      this.pg.filter(BLUR, BLUR_AMOUNT);
+
+      this.pg.translate(-xMin, -yMin);
+
+      this.drawLocation = this.rootPoint;
+      this.drawLocation.x = this.drawLocation.x - this.drawWidth / 2;
+      this.drawLocation.y = this.drawLocation.y - this.drawHeight;
+    }
+
+    this.tree.pg.stroke(treeColor);
+    this.tree.pg.strokeWeight(this.size * DRAW_MULTIPLIER);
+    this.tree.pg.noFill();
+    this.tree.pg.line(this.p1.x, this.p1.y, this.p2.x, this.p2.y);
 
     for ( let w in this.branches ) {
-      this.branches[w].display(pg);
+      this.branches[w].display();
     }
 
     if ( this.leaf ) {
-      this.leaf.display(pg);
+      this.leaf.display(this.tree.pg);
     }
   }
 }
