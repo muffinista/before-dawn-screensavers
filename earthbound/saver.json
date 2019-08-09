@@ -1,0 +1,10 @@
+{
+  "name": "Earthbound",
+  "description": "Earthbound's battle background animations",
+  "aboutUrl": "https://github.com/kdex/earthbound-battle-backgrounds",
+  "author": "",
+  "source": "index.html",
+  "options": [],
+  "requirements": ["none"],
+  "key": "earthbound"
+}
