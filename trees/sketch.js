@@ -37,19 +37,15 @@ var destColor = {
 var minColorTime = 5000;
 var maxColorTime = 15000;
 
-var minHoldTime = 15000;
+var minHoldTime = 10000;
 var maxHoldTime = 30000;
 
 var minTreeDelay = 2000;
 var maxTreeDelay = 5000;
 
-// we'll randomly pick an easing equation for the tween
-// make a list of all the easing types, we'll pick one randomly
-// and we'll skip the 'none' easing which comes first in the array
-var easings = [].concat.apply([],
-  Object.values(TWEEN.Easing).map(function(x) { return Object.values(x); })).slice(1);  
-
-
+/**
+ * main p5js setup function
+ */
 function setup() {
   BRANCH_ANGLE = HALF_PI/5;
 
@@ -77,9 +73,12 @@ function setup() {
   reset();
 }
 
+/**
+ * p5js draw loop
+ */
 function draw() {
-//  background(srcColor.r, srcColor.g, srcColor.b);
-  background(100, 100, 200);
+  background(srcColor.r, srcColor.g, srcColor.b);
+  // background(100, 100, 200);
   brightness(255);
 
   for ( let x = 0; x < treeCount; x++ ) {
@@ -95,19 +94,28 @@ function draw() {
  * @param {*} index 
  */
 function setupTreeTween(index) {
+  // we're not really using this value but it might
+  // be handy someday?
+  treeTweens[index].iteration += 1;
+
+  let middleTween = {
+    alpha: 255,
+    iteration: treeTweens[index].iteration
+  };
+
+  let endTween = {
+    alpha: 0,
+    iteration: middleTween.iteration
+  };
+
   treeTween = new TWEEN.Tween(treeTweens[index]).
-    to({alpha: 255, iteration: treeTweens[index].iteration + 1}, random(minTreeDelay, maxTreeDelay));
-    
-  // add a delay before tweening if this isn't the first iteration
-  //if ( treeTweens[index].iteration !== 0 ) {
-    treeTween = treeTween.chain(
+    to(middleTween, random(minTreeDelay, maxTreeDelay)).
+    chain(
       new TWEEN.Tween(treeTweens[index]).
-        to({alpha: 0}, random(minTreeDelay, maxTreeDelay)).
-        delay(minTreeDelay).
+        to(endTween, random(minTreeDelay, maxTreeDelay)).
+        delay(random(minHoldTime, maxHoldTime)).
         onComplete(() => { resetTree(index) })
     );
-
-  //}
 
   return treeTween;
 }
@@ -125,17 +133,23 @@ function setupColorTween() {
   srcColor.r = destColor.r;
   srcColor.g = destColor.g;
   srcColor.b = destColor.b;
+  srcColor.alreadyRun = destColor.alreadyRun;
 
   destColor = {
     r: random(80, 185),
     g: random(80, 185),
     b: random(80, 185),
+    alreadyRun: true
   };
 
   colorTween = new TWEEN.Tween(srcColor).
-                         to(destColor, random(minColorTime, maxColorTime)).
-                         delay(random(minHoldTime, maxHoldTime)).
-                         onComplete(resetColorTween);
+                         to(destColor, random(minColorTime, maxColorTime));
+
+  if ( srcColor.alreadyRun !== undefined ) {
+    colorTween = colorTween.delay(random(minHoldTime, maxHoldTime));
+  }
+  colorTween = colorTween.onComplete(resetColorTween);
+
   return colorTween;
 }
 
@@ -178,7 +192,7 @@ function reset() {
     resetTree(x);
   }
 
-//  resetColorTween();
+ resetColorTween();
 }
 
 
@@ -233,8 +247,9 @@ class Wood {
       }  
       // render image
       this.display();
-      this.pg.width /= 2;
-      this.pg.height /= 2;
+      this.scaleFactor = 0.5 + (Math.random() * 1.5);
+      this.pg.width /= this.scaleFactor;
+      this.pg.height /= this.scaleFactor;
     }
   }
 
