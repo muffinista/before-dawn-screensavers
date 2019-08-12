@@ -1,6 +1,6 @@
 const WIGGLE = 0.3;
 const MIN_LENGTH = 20;
-const MAX_LENGTH = 60;
+const MAX_LENGTH = 50;
 const START_THICKNESS = 9;
 const DRAW_MULTIPLIER = 1.5;
 const BLUR_AMOUNT = 3.0;
@@ -8,18 +8,14 @@ const BLUR_AMOUNT = 3.0;
 const PADDING = 20;
 
 let trees = [];
+let treeTweens = [];
+
 let BRANCH_ANGLE;
 
 let treeCount = 3;
 
 let w, h;
 let screenWidth, screenHeight;
-
-let treeAttributes = {
-  alpha: 0
-};
-
-let treeTween;
 
 // store the color tween object
 var colorTween;
@@ -41,11 +37,11 @@ var destColor = {
 var minColorTime = 5000;
 var maxColorTime = 15000;
 
-var minHoldTime = 5000;
-var maxHoldTime = 15000;
+var minHoldTime = 15000;
+var maxHoldTime = 30000;
 
-var minTreeDelay = 20000;
-var maxTreeDelay = 30000;
+var minTreeDelay = 2000;
+var maxTreeDelay = 5000;
 
 // we'll randomly pick an easing equation for the tween
 // make a list of all the easing types, we'll pick one randomly
@@ -53,15 +49,75 @@ var maxTreeDelay = 30000;
 var easings = [].concat.apply([],
   Object.values(TWEEN.Easing).map(function(x) { return Object.values(x); })).slice(1);  
 
-function setupTreeTween() {
-  treeTween = new TWEEN.Tween(treeAttributes).to({alpha: 255}, 2500).
-    chain(new TWEEN.Tween(treeAttributes).to({alpha: 0}, 2500).delay(minTreeDelay).onComplete(resetTree));
+
+function setup() {
+  BRANCH_ANGLE = HALF_PI/5;
+
+  pixelDensity(1);
+
+  if ( typeof(window.urlParams) !== "undefined" ) {
+    w = window.urlParams.width;
+    h = window.urlParams.height;
+  }
+  else {
+    w = screen.width;
+    h = screen.height;
+  }
+
+  screenWidth = w;
+  screenHeight = h;
+
+  // note -- if you don't do this, width/height will be strings!
+  w = parseInt(w, 10);
+  h = parseInt(h, 10);
+
+  createCanvas(screenWidth, screenHeight);
+  frameRate(30);
+  
+  reset();
+}
+
+function draw() {
+//  background(srcColor.r, srcColor.g, srcColor.b);
+  background(100, 100, 200);
+  brightness(255);
+
+  for ( let x = 0; x < treeCount; x++ ) {
+    let t = trees[x];
+    tint(255, treeTweens[x].alpha);
+    image(t.pg, t.drawLocation.x, height - t.pg.height);
+  };
+}
+  
+
+/**
+ * setup a tween for a single tree
+ * @param {*} index 
+ */
+function setupTreeTween(index) {
+  treeTween = new TWEEN.Tween(treeTweens[index]).
+    to({alpha: 255, iteration: treeTweens[index].iteration + 1}, random(minTreeDelay, maxTreeDelay));
+    
+  // add a delay before tweening if this isn't the first iteration
+  //if ( treeTweens[index].iteration !== 0 ) {
+    treeTween = treeTween.chain(
+      new TWEEN.Tween(treeTweens[index]).
+        to({alpha: 0}, random(minTreeDelay, maxTreeDelay)).
+        delay(minTreeDelay).
+        onComplete(() => { resetTree(index) })
+    );
+
+  //}
 
   return treeTween;
 }
 
-function resetTreeTween() {
-  setupTreeTween().start();
+/**
+ * when a tree is done tweening, start another tween
+ * @param {*} index 
+ */
+function resetTreeTween(index) {
+  setupTreeTween(index).start();
 }
 
 
@@ -88,81 +144,43 @@ function resetColorTween() {
 }
 
 
-function resetTree() {
-  trees = [];
-  for ( let x = 0; x < treeCount; x++ ) {
-    addTree();
-  }
-
-  for ( x = 0; x < 10; x++ ) {
-    trees.forEach(function(t) {
-      t.grow();
-    });  
-  }
-
-  // render images for all the trees
-  trees.forEach(function(t) {
-    t.display();
-  });
-
-  resetTreeTween();
-}
-function reset() {
-  resetTree();
-  resetColorTween();
-}
-
-function setup() {
-  BRANCH_ANGLE = HALF_PI/5;
-
-  pixelDensity(1);
-
-  if ( typeof(window.urlParams) !== "undefined" ) {
-    w = window.urlParams.width;
-    h = window.urlParams.height;
-  }
-  else {
-    w = screen.width;
-    h = screen.height;
-  }
-
-  w = 1000;
-  h = 800;
-
-  screenWidth = w;
-  screenHeight = h;
-
-  // note -- if you don't do this, width/height will be strings!
-  w = parseInt(w, 10);
-  h = parseInt(h, 10);
-
-  createCanvas(screenWidth, screenHeight);
-  frameRate(10);
-
-  reset();
-}
-
-function draw() {
-  background(srcColor.r, srcColor.g, srcColor.b);
-
-  // brightness(255);
-  tint(255, treeAttributes.alpha);
-
-  trees.forEach(function(t) {
-    // t.display();
-    image(t.pg, t.drawLocation.x, t.drawLocation.y);
-  });
-
-}
-
-function addTree() {
+/**
+ * create a tree at a random location
+ */
+function createTree() {
   let x = random(0, w);
   let y = h;
 
   let base = new Particle(x, y);
   let angle = -PI/2;
-  trees.push(new Wood(base, MAX_LENGTH, START_THICKNESS, angle));
+  return new Wood(base, MAX_LENGTH, START_THICKNESS, angle);
 }
+
+/**
+ * regenerate a tree
+ * 
+ * @param {index} where to put the tree in our array
+ */
+function resetTree(index) {
+  let t = createTree();
+  trees[index] = t;
+  resetTreeTween(index);
+}
+
+/**
+ * reset the entire sketch
+ */
+function reset() {
+  trees = [];
+  for ( let x = 0; x < treeCount; x++ ) {
+    trees.push(undefined);
+    treeTweens.push({alpha: 0, iteration: 0});
+    resetTree(x);
+  }
+
+//  resetColorTween();
+}
+
 
 // Child class 
 class Particle extends p5.Vector {}
@@ -180,6 +198,9 @@ class Leaf extends Particle {
   }
 }
 
+/**
+ * this class is basically a chunk of wood in a tree -- a branch/etc
+ */
 class Wood {
   constructor(p1, length, size, angle, root) {
     this.length = length;
@@ -188,9 +209,12 @@ class Wood {
     this.branches = [];
 
     if ( ! root ) {
+      // this is the first element in the tree. we start each tree
+      // at coordinates 0, 0
+      this.p1 = new Particle(0, 0);
+
       this.tree = this;
       this.angle = angle;
-      this.p1 = new Particle(0, 0);
       this.rootPoint = p1;
       this.treeColor = color(random(20, 120), random(20, 120), random(20, 120));
       this.leafColor = color(random(0, 255), random(0, 255), random(0, 255));
@@ -202,6 +226,16 @@ class Wood {
     }
 
     this.calculateEndPoint();
+
+    if ( this.tree == this ) {
+      for ( let i = 0; i < 10; i++ ) {
+        this.grow();
+      }  
+      // render image
+      this.display();
+      this.pg.width /= 2;
+      this.pg.height /= 2;
+    }
   }
 
   grow() {
