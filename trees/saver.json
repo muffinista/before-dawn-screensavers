@@ -4,7 +4,18 @@
   "aboutUrl": "",
   "author": "Colin Mitchell",
   "source": "index.html",
-  "options": [],
-  "requirements": ["none"],
-  "key": "trees"
+  "options": [
+    {
+      "index": 1,
+      "name": "Trees",
+      "type": "slider",
+      "description": "How many trees to render?",
+      "min": "1",
+      "max": "10",
+      "default": "3"
+    }
+  ],
+  "requirements": [
+    "none"
+  ]
 }

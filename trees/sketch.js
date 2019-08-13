@@ -6,15 +6,23 @@ const DRAW_MULTIPLIER = 1.5;
 const BLUR_AMOUNT = 3.0;
 
 const PADDING = 30;
-
 const LEAF_RADIUS = 12;
+
+const minColorTime = 5000;
+const maxColorTime = 15000;
+
+const minHoldTime = 10000;
+const maxHoldTime = 30000;
+
+const minTreeDelay = 2000;
+const maxTreeDelay = 5000;
+
+let treeCount = 3;
 
 let trees = [];
 let treeTweens = [];
 
 let BRANCH_ANGLE;
-
-let treeCount = 3;
 
 let w, h;
 let screenWidth, screenHeight;
@@ -36,14 +44,6 @@ var destColor = {
   b: 0
 };
 
-var minColorTime = 5000;
-var maxColorTime = 15000;
-
-var minHoldTime = 10000;
-var maxHoldTime = 30000;
-
-var minTreeDelay = 2000;
-var maxTreeDelay = 5000;
 
 /**
  * main p5js setup function
@@ -56,11 +56,16 @@ function setup() {
   if ( typeof(window.urlParams) !== "undefined" ) {
     w = window.urlParams.width;
     h = window.urlParams.height;
+
+    if ( typeof(window.Trees) !== "undefined" ) {
+      treeCount = parseInt(window.urlParams.Trees, 10);
+    }
   }
   else {
     w = screen.width;
     h = screen.height;
   }
+
 
   screenWidth = w;
   screenHeight = h;
@@ -80,7 +85,6 @@ function setup() {
  */
 function draw() {
   background(srcColor.r, srcColor.g, srcColor.b);
-  // background(100, 100, 200);
   brightness(255);
 
   for ( let x = 0; x < treeCount; x++ ) {
@@ -130,7 +134,9 @@ function resetTreeTween(index) {
   setupTreeTween(index).start();
 }
 
-
+/**
+ * setup a new color tween
+ */
 function setupColorTween() {
   srcColor.r = destColor.r;
   srcColor.g = destColor.g;
@@ -155,6 +161,9 @@ function setupColorTween() {
   return colorTween;
 }
 
+/**
+ * reset color tween when finished
+ */
 function resetColorTween() {
   setupColorTween().start();
 }
@@ -202,11 +211,23 @@ function reset() {
 class Particle extends p5.Vector {}
 
 class Leaf extends Particle {
+  /**
+   * 
+   * @param {x coordinate} x 
+   * @param {y coordinate} y 
+   * @param {radius of leaf} r 
+   */
   constructor(x, y, r) {
     super(x, y);
     this.radius = r;
   }
 
+  /**
+   * Draw the leaf onto the specified graphics object
+   * 
+   * @param {Graphics object} pg 
+   * @param {color} leafColor 
+   */
   display(pg, leafColor) {
     pg.fill(leafColor);
     pg.noStroke();
@@ -218,6 +239,14 @@ class Leaf extends Particle {
  * this class is basically a chunk of wood in a tree -- a branch/etc
  */
 class Wood {
+  /**
+   * 
+   * @param {Particle} p1 starting point
+   * @param {number} length length of branch
+   * @param {number} size size/thickness of branch
+   * @param {number} angle angle branch is pointing
+   * @param {Wood} root the trunk of the tree for this branch
+   */
   constructor(p1, length, size, angle, root) {
     this.length = length;
     this.size = size;
@@ -255,6 +284,9 @@ class Wood {
     }
   }
 
+  /**
+   * extend this branch out one level
+   */
   grow() {
     if ( this.size === 1 ) {
       if ( ! this.leaf ) {
@@ -273,10 +305,21 @@ class Wood {
     }
   }
 
+  /**
+   * return the angle this branch should travel. this doesn't
+   * really do anything right now, but in theory we could mutate
+   * the angle in weird ways, so i'm leaving it in place
+   * @param {number} angle 
+   */
   calculateAngle(angle) {
     return angle;
   }
 
+  /**
+   * figure out the end point of this piece of wood, which
+   * is simply the starting point plus the length in our
+   * given direction
+   */
   calculateEndPoint() {
     let x = this.p1.x + this.length * cos(this.angle);
     let y = this.p1.y + this.length * sin(this.angle);
@@ -290,6 +333,11 @@ class Wood {
     }
   }
 
+  /**
+   * add a branch to this chunk
+   * 
+   * @param {number} a angle of new branch
+   */
   addBranch(a) {
     let w = new Wood(this.p2,
       random(MIN_LENGTH, MAX_LENGTH),
@@ -299,25 +347,33 @@ class Wood {
     this.branches.push(w);
   }
 
+  /**
+   * add branches to this piece of wood
+   */
   addBranches() {
     let chance = random();
 
+    // add two branches
     if ( chance > 0.2 ) {
       this.addBranch(this.angle - BRANCH_ANGLE);
       this.addBranch(this.angle + BRANCH_ANGLE);
     }
+    // add three branches
     else if ( chance > 0.1 ) {
       this.addBranch(this.angle - BRANCH_ANGLE);
       this.addBranch(this.angle + BRANCH_ANGLE);
       this.addBranch(this.angle);
     }
+    // add a single branch
     else {
       this.addBranch(this.angle);
     }
   }
 
+  /**
+   * add a leaf to the end of the branch
+   */
   addLeaf() {
-    // put the leaf at the very end of the branch
     let r = LEAF_RADIUS;
     let x = this.p2.x + r * cos(this.angle);
     let y = this.p2.y + r * sin(this.angle);
@@ -325,19 +381,33 @@ class Wood {
     this.leaf = new Leaf(x, y, r);
   }
 
+  /**
+   * return all branches descended from this one
+   */
   allBranches() {
     return this.branches.concat(this.branches.map((b) => b.allBranches())).flat();
   }
 
+  /**
+   * return all points in all branches descended from this branch
+   */
   points() {
     return this.allBranches().map((b) => [b.p1, b.p2]).flat();
   }
 
+  /**
+   * return all leafs on branches descended from this branch
+   */
   allLeafs() {
     return this.allBranches().map((b) => b.leaf).flat().filter((l) => l !== undefined);
   }
 
-  // Draw the branch
+
+  /**
+   * render the branch and any descendants. if this is the trunk
+   * of a tree, we also generate a graphics object to hold the output 
+   * and do some calculations to get the expected width/height/etc
+   */
   display() {
     if ( this === this.tree && ! this.drawLocation ) {
       let tmp = this.points();
@@ -381,11 +451,6 @@ class Wood {
         l.display(this.tree.pg, this.tree.leafColor);
       }
     }
-
-
-    // if ( this.leaf ) {
-    //   this.leaf.display(this.tree.pg, this.tree.leafColor);
-    // }
   }
 }
 
