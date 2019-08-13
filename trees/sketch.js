@@ -5,7 +5,9 @@ const START_THICKNESS = 9;
 const DRAW_MULTIPLIER = 1.5;
 const BLUR_AMOUNT = 3.0;
 
-const PADDING = 20;
+const PADDING = 30;
+
+const LEAF_RADIUS = 12;
 
 let trees = [];
 let treeTweens = [];
@@ -20,7 +22,7 @@ let screenWidth, screenHeight;
 // store the color tween object
 var colorTween;
 
-// tween from this color....
+// tween background from this color....
 var srcColor = {
   r: 0,
   g: 0,
@@ -200,9 +202,9 @@ function reset() {
 class Particle extends p5.Vector {}
 
 class Leaf extends Particle {
-  constructor(x, y) {
+  constructor(x, y, r) {
     super(x, y);
-    this.radius = 12;
+    this.radius = r;
   }
 
   display(pg, leafColor) {
@@ -231,7 +233,7 @@ class Wood {
       this.angle = angle;
       this.rootPoint = p1;
       this.treeColor = color(random(20, 120), random(20, 120), random(20, 120));
-      this.leafColor = color(random(0, 255), random(0, 255), random(0, 255));
+      this.leafColor = color(random(0, 255), random(0, 255), random(0, 255), 120);
     }
     else {
       this.tree = root;
@@ -315,7 +317,12 @@ class Wood {
   }
 
   addLeaf() {
-    this.leaf = new Leaf(this.p2.x, this.p2.y)
+    // put the leaf at the very end of the branch
+    let r = LEAF_RADIUS;
+    let x = this.p2.x + r * cos(this.angle);
+    let y = this.p2.y + r * sin(this.angle);
+
+    this.leaf = new Leaf(x, y, r);
   }
 
   allBranches() {
@@ -324,6 +331,10 @@ class Wood {
 
   points() {
     return this.allBranches().map((b) => [b.p1, b.p2]).flat();
+  }
+
+  allLeafs() {
+    return this.allBranches().map((b) => b.leaf).flat().filter((l) => l !== undefined);
   }
 
   // Draw the branch
@@ -364,9 +375,17 @@ class Wood {
       this.branches[w].display();
     }
 
-    if ( this.leaf ) {
-      this.leaf.display(this.tree.pg, this.tree.leafColor);
+    // draw leaves separately, once everything else is drawn
+    if ( this === this.tree ) {
+      for ( let l of this.allLeafs() ) {
+        l.display(this.tree.pg, this.tree.leafColor);
+      }
     }
+
+
+    // if ( this.leaf ) {
+    //   this.leaf.display(this.tree.pg, this.tree.leafColor);
+    // }
   }
 }
 
