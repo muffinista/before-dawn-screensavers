@@ -5,7 +5,7 @@
   "author": "Colin Mitchell <colin@muffinlabs.com> (http://muffinlabs.com)",
   "devDependencies": {
     "grunt": "^1.0.4",
-    "grunt-contrib-watch": "^1.0.0",
+    "grunt-contrib-watch": "^1.1.0",
     "grunt-release": "^0.14.0"
   },
   "dependencies": {
