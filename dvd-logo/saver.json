@@ -1,0 +1,10 @@
+{
+  "name": "DVD Logo",
+  "description": "Enjoy a bouncing DVD logo on your screen",
+  "author": "Colin Mitchell",
+  "source": "index.html",
+  "options": [],
+  "requirements": [
+    "none"
+  ]
+}
