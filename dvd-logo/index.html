@@ -52,7 +52,6 @@
       x += xSpeed;
       y += ySpeed;
 
-      // console.log(x, y, xSpeed, ySpeed);
       bouncer.style.left = `${x}px`;
       bouncer.style.top = `${y}px`;
 
@@ -86,8 +85,6 @@
       y = parseInt(Math.random() * (h - box.height), 10);
       xSpeed = 3;
       ySpeed = 3;
-
-      console.log(screen, w, h, box, x, y);
 
       tweakColor();
     }
