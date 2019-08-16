@@ -36,6 +36,9 @@ header {
 header h1, header h2 {
   text-align: center;
 }
+header a {
+  text-decoration: none;
+}
 header p {
   padding: 12px;
 }
