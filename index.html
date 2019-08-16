@@ -8,30 +8,32 @@
     <link rel="stylesheet" href="__assets/styles.css"> 
   </head>
   <body>
-    <header>
-      <h1>Before Dawn</h1>
-      <h2>Screensaver Preview!</h2>
-      <p>Here's a tool to preview the screensavers available in
-        the application. Please note that some of them won't work
-        quite right because they require data, libraries, etc.</p>
-    </header>
-    <aside class="sidebar">
-      <ul class="savers">
-      </ul>
-    </aside>
+    <div class="content">
+      <header>
+        <h1>Before Dawn</h1>
+        <h2>Screensaver Preview!</h2>
+        <p>Here's a tool to preview the screensavers available in
+          the application. Please note that some of them won't work
+          quite right because they require data, libraries, etc.</p>
+      </header>
+      <aside class="sidebar">
+        <ul class="savers">
+        </ul>
+      </aside>
 
-    <main>
-      <div class="wrap">
-        <iframe scrolling="no"></iframe>
-      </div>
-    </main>
+      <main>
+        <div class="wrap">
+          <iframe scrolling="no"></iframe>
+        </div>
+      </main>
 
-    <footer>
-      <p>If you like these, you can run them on your computer by
-          <a href="https://github.com/muffinista/before-dawn/releases/latest">installing
-          Before Dawn</a>.</p>
-    </footer>
-    
+      <footer>
+        <p>If you like these, you can run them on your computer by
+            <a href="https://github.com/muffinista/before-dawn/releases/latest">installing
+            Before Dawn</a>.</p>
+      </footer>
+    </div> 
+       
     <script id="template" type="x-tmpl-mustache">
       <li><a href="{{url}}">{{ name }}</a></li>
     </script>
