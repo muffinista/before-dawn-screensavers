@@ -14,7 +14,8 @@ module.exports = function(grunt) {
     return folders;
   };
 
-  grunt.registerTask('rebuild', 'Update list of screensavers', function() {   
+  grunt.registerTask('rebuild', 'Update list of screensavers', function() {
+    console.log(getFolders());
     fs.writeFileSync("savers.json", JSON.stringify(getFolders()));   
   });
 

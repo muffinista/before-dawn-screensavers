@@ -1,70 +1,74 @@
-* {
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
+:root {
+  --preview-width: 1024px;
+  --preview-height: 768px;
+  --preview-scale: 0.50;
+  --preview-display-width: calc(var(--preview-width)*var(--preview-scale));
+  --preview-display-height: calc(var(--preview-height)*var(--preview-scale));
 }
 
-.header {
-    margin-left: 5px;
+* {
+  box-sizing: border-box;
 }
-p {
-    font-size: 90%;
+
+body {
+  display: grid;
+  grid-gap: 12px;
+  grid-template-columns: 180px 1fr;
+  grid-template-areas: "header header"
+    "sidebar content"
+    "footer footer";
 }
+header {
+  grid-area: header;
+}
+.sidebar {
+  grid-area: sidebar;
+  max-height: 600px;
+  overflow-y: scroll;
+}
+main {
+  grid-area: content;
+}
+footer {
+  grid-area: footer;
+}
+.wrap {
+  overflow: hidden;
+  width: var(--preview-display-width);
+  height: var(--preview-display-height);
+}
+iframe {
+  position: absolute;
+  width: var(--preview-width);
+  height: var(--preview-height);
+  border: 0;
+
+  transform: scale(var(--preview-scale));
+  transform-origin: 0 0;
+}
+
+@media only screen and (max-width: 730px) {
+  body {
+    grid-template-columns: 1fr;
+    grid-template-areas: "header"
+      "content"
+      "sidebar"
+      "footer";
+  }
+  .sidebar {
+    max-height: initial;
+    overflow-y: initial;
+  }
+}
+
 ul {
-    list-style-type: none;
-    padding-left: 10px;
+  list-style-type: none;
+  padding-left: 10px;
 }
 a {
-    color: #0000ff;
+  color: #0000ff;
 }
 a:hover,
 a:focus {
-    color: #ff0000;
+  color: #ff0000;
 }
-
-h3 {
-    font-weight: 100;
-}
-
-#layout {
-    padding: 0;
-}
-
-.brand-title,
-.brand-tagline {
-    margin: 0;
-}
-.brand-title {
-    text-transform: uppercase;
-}
-.brand-tagline {
-    font-weight: 300;
-    color: rgb(176, 202, 219);
-}
-
-.nav-list {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-}
-.nav-item {
-    display: inline-block;
-    *display: inline;
-    zoom: 1;
-}
-.nav-item a {
-    background: transparent;
-    border: 2px solid rgb(176, 202, 219);
-    color: #fff;
-    margin-top: 1em;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    font-size: 85%;
-}
-.nav-item a:hover,
-.nav-item a:focus {
-    border: 2px solid rgb(61, 146, 201);
-    text-decoration: none;
-}
-
-

@@ -5,6 +5,8 @@
   "author": "",
   "source": "index.html",
   "options": [],
-  "requirements": ["none"],
+  "requirements": [
+    "none"
+  ],
   "key": "earthbound"
 }
