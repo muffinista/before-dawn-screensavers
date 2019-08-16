@@ -21,7 +21,7 @@ int min_r; // = int((height * 2) * min_radius);
 int max_r; // = int(height * max_radius);
 
 int min_sprite = 1;
-int max_sprite = 1661;
+int max_sprite = 3077;
 
 
 class Star {
