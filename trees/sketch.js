@@ -66,13 +66,14 @@ function setup() {
     h = screen.height;
   }
 
-
-  screenWidth = w;
-  screenHeight = h;
-
   // note -- if you don't do this, width/height will be strings!
   w = parseInt(w, 10);
   h = parseInt(h, 10);
+
+  console.log(w, h);
+
+  screenWidth = w;
+  screenHeight = h;
 
   createCanvas(screenWidth, screenHeight);
   frameRate(30);

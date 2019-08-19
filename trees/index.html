@@ -1,8 +1,13 @@
 <html>
 	<head>
-  	<script language="javascript" type="text/javascript" src="Tween.min.js"></script>
-  	<script language="javascript" type="text/javascript" src="p5.min.js"></script>
-  	<script language="javascript" type="text/javascript" src="sketch.js"></script>
+		<script>
+      window.urlParams = window.location.search.split(/[?&]/).slice(1).map(function(paramPair) {
+        return paramPair.split(/=(.+)?/).slice(0, 2);
+      }).reduce(function (obj, pairArray) {            
+        obj[pairArray[0]] = pairArray[1];
+        return obj;
+      }, {});
+		</script>
 		<style>
 			body {
 				width: 100%;
@@ -16,4 +21,8 @@
 	<body>
     <div id="container"></div>
 	</body>
+
+	<script language="javascript" type="text/javascript" src="../__assets/Tween.min.js"></script>
+	<script language="javascript" type="text/javascript" src="../__assets/p5.min.js"></script>
+	<script language="javascript" type="text/javascript" src="sketch.js"></script>
 </html>
