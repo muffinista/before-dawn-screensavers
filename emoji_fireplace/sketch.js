@@ -17,7 +17,6 @@ var grid_h = 5;
 // sprite sources/scaling
 var sprite_size = 72;
 var sprite_scale = 1.0;
-var urlBase = "https://raw.githubusercontent.com/twitter/twemoji/gh-pages/72x72/";
 var images = {};
 
 var emitters = [];
@@ -42,33 +41,19 @@ function codeToImage(c) {
   return loadImage(c + ".png");
 }
 
-var isPreview = false;
 
 function preload() {
-  if ( typeof(window.urlParams) !== "undefined" ) {
-    console.log(window.urlParams);
-    if ( parseInt(window.urlParams.preview, 10) === 1 ) {
-      isPreview = true;
-    }
-  }
-
-  if ( ! isPreview ) {
-    images.FIRE = loadImage(FIRE + ".png");
-    images.SMOKE = codeToImage(SMOKE);
-    images.SPARKLES = codeToImage(SPARKLES);
-    images.STAR = codeToImage(STAR);
-    images.DIZZY = codeToImage(DIZZY);
-  }
+  images.FIRE = loadImage(FIRE + ".png");
+  images.SMOKE = codeToImage(SMOKE);
+  images.SPARKLES = codeToImage(SPARKLES);
+  images.STAR = codeToImage(STAR);
+  images.DIZZY = codeToImage(DIZZY);
 }
 
 /**
  * p5 setup call
  */
 function setup() {
-  if ( isPreview ) {
-    return;
-  }
-
   for ( var i = 0; i < grid_w; i++ ) {
     emitters.push(1.0);
   }
@@ -101,7 +86,7 @@ function updateEmitters() {
   // each time. if we're never happy, we just give up and return what we have
   while( check_count < 10 && ( new_emitters.length == 0 || ! is_valid(new_emitters) ) )  {
     check_count = check_count + 1;
-    new_emitters = _.map(emitters, function(e) {
+    new_emitters = emitters.map(function(e) {
       chance = BASE_CHANGE_CHANCE + ( Math.abs(3-e) * 0.1);
       
       var acted = false;
@@ -157,9 +142,10 @@ function is_valid(row) {
 
     neighbors = [row[l] , row[r]];
     var e = row[i];
-    valid = _.all(neighbors, function(n) {
+    valid = neighbors.filter(function(n) {
       var x = Math.abs(n-e) <= MAX_DIFF;
-      return x;}) == true;
+      return x;
+    }) == true;
 
     if ( valid == false ) {
       return false;
@@ -175,10 +161,6 @@ function is_valid(row) {
  */
 function draw() {
   var sprite;
-
-  if ( isPreview ) {
-    return;
-  }
   
   // call clear to ensure that our background is transparent
   clear();
@@ -197,7 +179,7 @@ function draw() {
         if ( value > MIN_DECORATION_LEVEL && 
              random() <= DECORATION_CHANCE && 
              (value == y || value == y - 1) ) {
-               sprite = _.sample(decorations);
+              sprite = decorations[Math.floor(Math.random() * decorations.length)];
         }
         else {
           sprite = images.FIRE;
