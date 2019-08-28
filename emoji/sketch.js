@@ -94,7 +94,7 @@ function setup() {
   max_r = int(height * max_radius);
 
 
-  sprites = []; //new PImage[num_sprites];
+  sprites = [];
 
   // load a pile of random sprites
   for (let i = 0; i < num_sprites; i++ ) {
