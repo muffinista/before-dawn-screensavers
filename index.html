@@ -44,20 +44,10 @@
           url = url + "/index.html";
         }
         url = url + "?width=1024&height=768&screenshot=../__assets/desktop2.png";
-        console.log(url);
+        // console.log(url);
         document.querySelector('iframe').src = url;
       };
 
-      var getList = function() {
-        fetch('./savers.json').
-          then(response => response.json()).
-          then(function(list) {
-            for ( var i = 0; i < list.length; i++ ) {
-              var subdir = list[i];
-              populate(subdir);
-            }
-        });
-      };
 
       var toDom = function(html) {
         var template = document.createElement('template');
@@ -72,7 +62,7 @@
         }
       }
 
-      var populate = function(subdir) {
+      var populate = function(subdir, doLoad) {
         var root = document.querySelector('ul.savers');
 
         var url = subdir + "/saver.json";
@@ -93,6 +83,10 @@
             var output = Mustache.render(template, data);
 
             root.appendChild(toDom(output));
+
+            if ( doLoad ) {
+              load(subdir);
+            }
           });
       };
 
@@ -102,11 +96,24 @@
         template = document.querySelector('#template').innerHTML;
         Mustache.parse(template);
 
-        getList();
+        fetch('./savers.json').
+          then(response => response.json()).
+          then(function(list) {
+            for ( var i = 0; i < list.length; i++ ) {
+              var subdir = list[i];
+              var doLoad = false;
 
-        if ( window.location.hash ) {
-          load(window.location.hash.substr(1));
-        }
+              if ( !window.location.hash ) {
+                window.location.hash = "#" + subdir;
+                doLoad = true;
+              }
+              else if (subdir === window.location.hash.substr(1) ) {
+                doLoad = true;
+              }
+
+              populate(subdir, doLoad);
+            }
+          });
       };
 
       document.querySelector('ul.savers').addEventListener('click', function(e) {
