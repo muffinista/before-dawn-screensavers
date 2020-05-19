@@ -1,0 +1,48 @@
+{
+  "name": "Say No More",
+  "description": "Recreation of the After Dark screensaver 'Say What?'",
+  "aboutUrl": "https://gitlab.com/maxlefou/adquotes",
+  "author": "Max le Fou",
+  "source": "index.html",
+  "options":[
+    {
+      "name": "quotings",
+      "type": "text",
+      "description": "To change the quotes, get in the screensaver's folder and edit the file 'quotes.js' in notepad."
+    },
+    {
+      "name": "secs",
+      "type": "slider",
+      "description": "How many seconds between quotes?",
+      "min": "10",
+      "max": "100",
+      "default": "10000"
+    },
+    {
+      "name": "borderStyle",
+      "type": "text",
+      "default": "random",
+      "description": "Choices are: 'none', 'solid', 'double', 'random' and 'fullrandom'."
+    },
+    {
+      "name": "borderColor",
+      "type": "text",
+      "default": "original",
+      "description": "Choices are: 'original', 'random' or any html color code."
+    },
+    {
+      "name": "fontStyle",
+      "type": "text",
+      "default": "serif",
+      "description": "Name of the used webfont. Check the screensaver's wiki to install your own font."
+    },
+    {
+      "name": "fontSize",
+      "type": "slider",
+      "description": "Size of the font in em.",
+      "min": "1.0",
+      "max": "10.0",
+      "default": "1.5"
+    }
+  ]
+}

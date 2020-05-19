@@ -1,0 +1,33 @@
+<html>
+<head>
+	<title>Cave Story screensaver by Max le Fou</title>
+	<link rel="stylesheet" type="text/css" href="main.css" />
+	<script src="js/jquery.min.js" type="text/javascript"></script>
+	<script src="js/jquery.spritely.js" type="text/javascript"></script> 
+	<script src="js/main.js" type="text/javascript"></script> 
+	
+</head>
+<body>
+
+	<div id="moon"></div>
+
+	<div id="balrog"><img id="flying_sprite" src="img/balrog.gif" /></div>
+	
+	<div id="cloud1"></div>
+	<div id="cloud2"></div>
+	<div id="cloud3"></div>
+	<div id="cloud4"></div>
+	
+	<script>
+		var spriteEl = document.getElementById('flying_sprite');
+		const urlParams = new URLSearchParams(window.location.search);
+		sprite = urlParams.get('sprite');
+		if (sprite != null) {
+		  spriteEl.src = "img/"+sprite+".gif";
+		} else {
+		  spriteEl.src = "img/balrog.gif";
+		};
+	</script>
+	
+</body>
+</html>

@@ -1,0 +1,15 @@
+{
+  "name": "Cave Story",
+  "description": "Get Balrog or a dragon flying above the clouds.",
+  "aboutUrl": "https://gitlab.com/maxlefou/cave-story-bdsaver",
+  "author": "Max le Fou",
+  "source": "index.html",
+  "options":[
+    {
+      "name": "sprite",
+      "type": "text",
+      "default": "balrog",
+      "description": "Choices are: 'balrog' and 'kazuma'."
+    }
+  ]
+}
