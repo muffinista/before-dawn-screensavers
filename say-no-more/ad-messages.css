@@ -1,0 +1,12 @@
+body {
+  background-color: black;
+  color: white;
+  width: 100%;
+  margin: 1em;
+}
+
+#thebox {
+  border-width: 1px;
+  position: fixed;
+  padding: 0.15em;
+}
