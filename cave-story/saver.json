@@ -4,7 +4,7 @@
   "aboutUrl": "https://gitlab.com/maxlefou/cave-story-bdsaver",
   "author": "Max le Fou",
   "source": "index.html",
-  "options":[
+  "options": [
     {
       "name": "sprite",
       "type": "text",
