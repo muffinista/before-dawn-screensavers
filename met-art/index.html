@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Met Art Images</title>
+  </head>
+  <style>
+   * {
+     padding: 0;
+     margin: 0;
+   }
+
+   body {
+     overflow:hidden;
+     background-color: black;
+     display: flex;
+     flex-direction: row;
+     margin: 5.0em;
+   }
+   body.flipped {
+     flex-direction: row-reverse;
+   }
+
+   div.image {
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     width: 60vw;
+   }
+   img {
+     object-fit: contain;
+     max-width: 60vw;
+     max-height: 80vh;
+   }
+   div.data-wrapper {
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     width: 25vw;
+     max-height: 80vh;
+   }
+   div.data {
+     display: flex;
+     flex-direction: column;     
+   }
+
+   h1, h2 {
+     text-align: center;
+     margin-bottom: 2.0em;
+     font-size: 1.2em;
+     color: #dddddd;
+   }
+  </style>
+  <body>
+    <div class="image">
+      <img id="screen" />
+    </div>
+    <div class="data-wrapper">
+      <div class="data">
+        <h1></h1>
+        <h2></h2>
+      </div>
+    </div>
+  </body>
+  <script>
+   var waitTime = 60 * 1000 * 5;
+   var ids = [];
+   var img = document.getElementById("screen");
+   var h1 = document.querySelector("h1");
+   var h2 = document.querySelector("h2");
+
+   
+   var loadImage = function() {
+     var rand = ids[Math.floor(Math.random() * ids.length)];
+     var url = `https://collectionapi.metmuseum.org/public/collection/v1/objects/${rand}`;
+
+     fetch(url)
+       .then(response => response.json())
+       .then((data) => {
+         image = data.primaryImage;
+
+         img.src = image;
+         h1.innerText = data.title;
+         h2.innerText = data.artistDisplayName;
+
+         if ( Math.random() > 0.5 ) {
+           document.querySelector("body").classList.toggle('flipped');
+         }
+         
+         setTimeout(loadImage, waitTime);
+       });
+   };
+
+   var load = function() {
+     var url = "./ids.json";
+
+     fetch("./ids.json")
+       .then(response => response.json())
+       .then((data) => { ids = data; loadImage(); });
+   };
+
+   load();
+
+  </script>
+</html>
