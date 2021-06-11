@@ -1,19 +1,11 @@
 {
-  "name": "Emoji Starfield",
+  "name": "Emoji Kaleidoscope",
   "source": "index.html",
-  "description": "Emoji flying through space. Emojis from the twemoji project",
+  "description": "An emoji kaleidoscope. Emojis from the twemoji project",
   "aboutUrl": "http://muffinlabs.com/",
   "requirements": [
     "none"
   ],
   "options": [
-    {
-      "name": "density",
-      "type": "slider",
-      "description": "How dense to make the starfield?",
-      "min": "1",
-      "max": "100",
-      "default": "75"
-    }
   ]
 }
