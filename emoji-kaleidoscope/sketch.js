@@ -9,19 +9,19 @@ var min_sprite = 1;
 var max_sprite = 3077;
 var num_sprites = 10;
 
-let spriteImage;
-
 let vector;
-let slices = 6;
+let slices;
 let slicer;
 
-let xMult = 10;
-let yMult = 0;
+let xMult = 2;
+let yMult = 2;
 
 const sheetSize = 10;
 
 const outputScale = 1.0;
 let rotation = 0;
+
+const spriteCount = 200;
 
 
 function preload() {
@@ -68,13 +68,13 @@ function setup() {
   noStroke();
   frameRate(fps);
 
-  spriteImage = sprites[0];
+  slices = int(random(4, 14));
   vector = createVector(0, 0);
 
-  slicer = new SliceBuilder(spriteImage, slices);
+  slicer = new SliceBuilder(sprites[0].width, sprites[0].height, slices);
 
-  imgWidth = slicer.w / 2;
-  imgHeight = slicer.h / 2;
+  imgWidth = slicer.w;
+  imgHeight = slicer.h;
 }
 
 function emit(img, x, y, rotations) {
@@ -116,10 +116,10 @@ function draw() {
 }
 
 class SliceBuilder {
-  constructor(source, slices) {
+  constructor(spriteWidth, spriteHeight, slices) {
     //the width and height parameters for the mask
-    this.w = source.width * sheetSize;
-    this.h = source.height * sheetSize;
+    this.w = spriteWidth * sheetSize;
+    this.h = spriteHeight * sheetSize;
 
     //create a mask of a slice of the original image.
     this.mask = createGraphics(this.w, this.h); 
@@ -131,16 +131,16 @@ class SliceBuilder {
 
     this.sheet = createGraphics(this.w, this.h);
     this.sheet.clear();
-    for( let i = 0; i < 200; i++ ) {
+    for( let i = 0; i < spriteCount; i++ ) {
       let idx = int(random(0, num_sprites));
       this.sheet.push();
       this.sheet.rotate(random([0, PI / 2, PI, PI * 1.5]));
-      this.sheet.image(sprites[idx], random(0, source.width * sheetSize), random(0, source.height * sheetSize));
+      this.sheet.image(sprites[idx], random(0, spriteWidth * sheetSize), random(0, spriteHeight * sheetSize));
       this.sheet.pop();
     }
 
     //
-    // make a copy of the image with copies of the image on all sides, for wrapping
+    // make a copy of the sprite sheet with copies of the image on all sides, for wrapping
     //
     this.base = createGraphics(this.w * 2, this.h * 2);
     this.base.clear();
