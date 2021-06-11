@@ -99,7 +99,7 @@ function setup() {
   // load a pile of random sprites
   for (let i = 0; i < num_sprites; i++ ) {
     var index = int(random(min_sprite, max_sprite));
-    let tmp = loadImage("data/" + index + ".png");
+    let tmp = loadImage("../__assets/emoji/" + index + ".png");
     sprites.push(tmp);
   }
  
