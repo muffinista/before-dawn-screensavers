@@ -93,8 +93,8 @@ function draw() {
   const img = slicer.toImage(vector, imgWidth, imgHeight);
 
   translate(width / 2, height / 2);
-  rotate(rotation);
-  rotation += 0.005;
+  // rotate(rotation);
+  // rotation += 0.005;
 
   emit(img, -width/2, -height/2, slices);
   emit(img, width/2, height/2, slices);
