@@ -1,0 +1,11 @@
+{
+  "name": "Fireflies",
+  "source": "index.html",
+  "description": "Fireflies",
+  "aboutUrl": "http://muffinlabs.com/",
+  "requirements": [
+    "none"
+  ],
+  "options": [
+  ]
+}
