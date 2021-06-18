@@ -3,10 +3,16 @@
   "version": "0.9.40",
   "description": "A package of the screensavers for Before Dawn",
   "author": "Colin Mitchell <colin@muffinlabs.com> (http://muffinlabs.com)",
+  "scripts": {
+    "grunt": "grunt",
+    "update-emoji": "grunt update-emoji",
+    "preflight": "grunt preflight",
+    "rebuild": "grunt rebuild",
+    "release": "grunt release"
+  },
   "devDependencies": {
     "dotenv": "^10.0.0",
     "grunt": "^1.4.1",
-    "grunt-release": "^0.14.0",
-    "load-grunt-tasks": "^5.1.0"
+    "grunt-release": "^0.14.0"
   }
 }

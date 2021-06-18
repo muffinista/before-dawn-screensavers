@@ -36,6 +36,11 @@ module.exports = function(grunt) {
     }
   });
 
+  grunt.registerTask('update-emoji', 'Update emoji index', function() {
+    const files = fs.readdirSync("__assets/emoji").filter((f) => f.match(/.png$/));
+    fs.writeFileSync("__assets/emoji/index.json", JSON.stringify(files));
+  });
+
   grunt.initConfig({
     release: {
       options: {
@@ -51,7 +56,6 @@ module.exports = function(grunt) {
     }
   });
   
-  grunt.loadNpmTasks('load-grunt-tasks');
   grunt.loadNpmTasks('grunt-release');
   grunt.registerTask('default', ['rebuild']);
 };
