@@ -49,20 +49,32 @@ function setup() {
   for(let i = 0; i < density; i++ ) {
     const offset = noise(i) * 10000;
     const f = new Firefly(random(0, width), random(0, height),
-      (x, y, ticks) => {
+      (firefly, ticks) => {
 
-        const slowAmt = (offset + ticks) / 2000;
-        const slowVal = (sin(slowAmt) + 1.0) * 128;
-        if ( slowVal < minBrightness ) {
-          return 0;
+        if ( firefly.lastChange + 15000 <= ticks ||
+          (firefly.lastChange + 5000 <= ticks && random() > firefly.switchChance) ) {
+          firefly.switchChance = random();
+          firefly.lastChange = ticks;
+          firefly.state = firefly.state == 'dark' ? 'active' : 'dark';
         }
 
-        const amt = (offset + ticks) / 10;
-        const val = (sin(amt) + 1.0) * 128;
-        if ( val < minBrightness ) {
+        if ( firefly.state == 'dark' ) {
           return 0;
         }
-        return val;
+        else {
+          const slowAmt = (offset + ticks) / 2000;
+          const slowVal = (sin(slowAmt) + 1.0) * 128;
+          if ( slowVal < minBrightness ) {
+            return 0;
+          }
+  
+          const amt = (offset + ticks) / 10;
+          const val = (sin(amt) + 1.0) * 128;
+          if ( val < minBrightness ) {
+            return 0;
+          }
+          return val;  
+        }
       });
     fireflies.push(f);
   }
@@ -93,7 +105,6 @@ function draw() {
  * and drop the alpha values
  */
  function fade() {
-  var val;
   pg.loadPixels();
 
   // p5 stores pixels in an array split up into R, G, B, A values
@@ -101,26 +112,28 @@ function draw() {
   //
   // let's iterate through each pixel and drop the alpha a bit
   //
-  for (var i = 0; i < pg.pixels.length ; i = i + 4) {
-    val = pg.pixels[i+3];
-    if ( val > 0 ) {
-      val = val - alpha_bump;
-      pg.pixels[i+3] = val;
-    }
+  for (var i = 3; i < pg.pixels.length ; i += 4) {
+    pg.pixels[i] = pg.pixels[i] > 0 ? pg.pixels[i] - alpha_bump : 0;
   }
   pg.updatePixels();
+  pg.imageData = pg.pixels = null;
 }
+
 
 class Firefly {
   constructor(x, y, pulseFn) {
+    this.lastChange = 0;
+    this.switchChance = random();
+
     this.acceleration = createVector(0, 0);
     this.velocity = createVector(random(-1, 1), random(-1, 1));
     this.position = createVector(x, y);
-    this.r = 2 + random() * 2.0;
+    this.r = 2 + random() * 3.0;
     this.maxspeed = 3; // Maximum speed
     this.maxforce = 0.05; // Maximum steering force
     this.pulseFn = pulseFn;
     this.minBrightness = minBrightness;
+
   }
 
   update() {
@@ -147,7 +160,7 @@ class Firefly {
       this.position.y = width + this.position.y;
     }
 
-    this.brightness = this.pulseFn(this.x, this.y, frameCount);
+    this.brightness = this.pulseFn(this, frameCount);
   }
 
   draw(pg) {
