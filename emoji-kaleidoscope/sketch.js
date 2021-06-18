@@ -5,8 +5,6 @@ var fps = 10;
 
 var bgcolor = 0;
 
-var min_sprite = 1;
-var max_sprite = 3077;
 var num_sprites = 10;
 
 let vector;
@@ -27,12 +25,15 @@ const spriteCount = 200;
 function preload() {
   sprites = [];
 
-  // load a pile of random sprites
-  for (let i = 0; i < num_sprites; i++ ) {
-    var index = int(random(min_sprite, max_sprite));
-    let tmp = loadImage("../__assets/emoji/" + index + ".png");
-    sprites.push(tmp);
-  }
+  // load the list of emoji sprites
+  loadJSON("../__assets/emoji/index.json", (allSprites) => {
+    // load a pile of random sprites
+    for (let i = 0; i < num_sprites; i++ ) {
+      const url = "../__assets/emoji/" + random(allSprites);
+      let tmp = loadImage(url);
+      sprites.push(tmp);
+    }
+  });
 }
 
 function setup() {

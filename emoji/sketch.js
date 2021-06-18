@@ -18,9 +18,6 @@ var bgcolor = 0;
 var min_r; // = int((height * 2) * min_radius);
 var max_r; // = int(height * max_radius);
 
-var min_sprite = 1;
-var max_sprite = 3077;
-
 
 class Star extends p5.Vector {
   constructor() {
@@ -60,6 +57,21 @@ class Star extends p5.Vector {
   }
 };
 
+function preload() {
+  sprites = [];
+
+  // load the list of emoji sprites
+  loadJSON("../__assets/emoji/index.json", (allSprites) => {
+    // load a pile of random sprites
+    for (let i = 0; i < num_sprites; i++ ) {
+      const url = "../__assets/emoji/" + random(allSprites);
+      let tmp = loadImage(url);
+      sprites.push(tmp);
+    }
+  });
+}
+
+
 function setup() {
   if ( typeof(window.urlParams) !== "undefined" ) {
     display_width = window.urlParams.width;
@@ -92,16 +104,6 @@ function setup() {
 
   min_r = int((height * 2) * min_radius);
   max_r = int(height * max_radius);
-
-
-  sprites = [];
-
-  // load a pile of random sprites
-  for (let i = 0; i < num_sprites; i++ ) {
-    var index = int(random(min_sprite, max_sprite));
-    let tmp = loadImage("../__assets/emoji/" + index + ".png");
-    sprites.push(tmp);
-  }
  
   noStroke();
   frameRate(fps);
