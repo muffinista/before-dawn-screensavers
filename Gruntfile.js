@@ -37,12 +37,6 @@ module.exports = function(grunt) {
   });
 
   grunt.initConfig({
-    watch: {
-      scripts: {
-        files: ['**/*.json'],
-        tasks: ['rebuild']
-      }
-    },
     release: {
       options: {
         beforeRelease: ['rebuild', 'preflight'],
@@ -58,7 +52,6 @@ module.exports = function(grunt) {
   });
   
   grunt.loadNpmTasks('load-grunt-tasks');
-  grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-release');
   grunt.registerTask('default', ['rebuild']);
 };
