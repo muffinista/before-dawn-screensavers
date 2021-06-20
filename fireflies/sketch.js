@@ -29,7 +29,7 @@ function setup() {
   }
 
   if ( density === undefined ) {
-    density = 25;
+    density = 20;
   }
 
   
