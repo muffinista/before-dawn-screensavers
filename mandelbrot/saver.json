@@ -1,0 +1,10 @@
+{
+  "name": "Emoji Kaleidoscope",
+  "source": "index.html",
+  "description": "An emoji kaleidoscope. Emojis from the twemoji project",
+  "aboutUrl": "http://muffinlabs.com/",
+  "requirements": [
+    "none"
+  ],
+  "options": []
+}
