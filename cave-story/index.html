@@ -22,11 +22,11 @@
 		var spriteEl = document.getElementById('flying_sprite');
 		const urlParams = new URLSearchParams(window.location.search);
 		sprite = urlParams.get('sprite');
-		if (sprite != null) {
-		  spriteEl.src = "img/"+sprite+".gif";
-		} else {
-		  spriteEl.src = "img/balrog.gif";
-		};
+		if (sprite === null) {
+			sprite = "balrog";
+		}
+		spriteEl.src = "img/"+sprite+".gif";
+		console.log(spriteEl);
 	</script>
 	
 </body>
