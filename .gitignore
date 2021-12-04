@@ -45,3 +45,5 @@ app/ui/*.js
 **/tmp
 
 *~
+
+.vscode

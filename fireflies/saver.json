@@ -1,0 +1,19 @@
+{
+  "name": "Fireflies",
+  "source": "index.html",
+  "description": "Fireflies",
+  "aboutUrl": "http://muffinlabs.com/",
+  "requirements": [
+    "none"
+  ],
+  "options": [
+    {
+      "name": "density",
+      "type": "slider",
+      "description": "How many fireflies?",
+      "min": "1",
+      "max": "100",
+      "default": "20"
+    }
+  ]
+}

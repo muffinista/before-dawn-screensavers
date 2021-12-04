@@ -10,9 +10,9 @@ for(let k of tmpParams.keys() ) {
 
 
 let shape_count = 2; // how many shapes to draw?
-let alpha_bump = 3; window.urlParams['Fade Rate'] || 3; // how much to fade alpha each time we draw
-let vertex_count = 4;  window.urlParams['Vertex Count'] || 4; // how many vertices on each one?
-let velocity_base = 5; window.urlParams['Speed'] || 5; // min/max velocity
+let alpha_bump = 3; // how much to fade alpha each time we draw
+let vertex_count = 4; // how many vertices on each one?
+let velocity_base = 5; // min/max velocity
 
 const VELOCITY_PAD = 1; // ensure a velocity of at least this much
 
@@ -139,7 +139,7 @@ function setup() {
   }
 
   // we're going to draw to a PGraphics object, here it is
-  pg = createGraphics(width, height);
+  pg = createGraphics(w, h);
   pg.background(0);
 }
 
@@ -182,12 +182,12 @@ function draw() {
   fade();
 }
 
+
 /**
  * iterate through the pixels of our global PGraphic object
  * and drop the alpha values
  */
-function fade() {
-  var val;
+ function fade() {
   pg.loadPixels();
 
   // p5 stores pixels in an array split up into R, G, B, A values
@@ -195,13 +195,10 @@ function fade() {
   //
   // let's iterate through each pixel and drop the alpha a bit
   //
-  for (var i = 0; i < pg.pixels.length ; i = i + 4) {
-    val = pg.pixels[i+3];
-    if ( val > 0 ) {
-      val = val - alpha_bump;
-      pg.pixels[i+3] = val;
-    }
+  for (var i = 3; i < pg.pixels.length ; i += 4) {
+    pg.pixels[i] = pg.pixels[i] > 0 ? pg.pixels[i] - alpha_bump : 0;
   }
   pg.updatePixels();
+  pg.imageData = pg.pixels = null;
 }
 
