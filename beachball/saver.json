@@ -1,0 +1,11 @@
+{
+  "name": "Beach ball of doom",
+  "description": "Spinning beach ball of doom",
+  "aboutUrl": "",
+  "author": "Colin Mitchell",
+  "source": "index.html",
+  "options": [],
+  "requirements": [
+    "screen"
+  ]
+}
