@@ -1,0 +1,9 @@
+{
+  "name": "Spotlight",
+  "description": "Spotlights running across your screen",
+  "author": "Colin Mitchell",
+  "source": "index.html",
+  "requirements": [
+    "screen"
+  ]
+}

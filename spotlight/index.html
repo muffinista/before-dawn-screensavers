@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>spotlight</title>
+    <script src="../__assets/Tween.js"></script>
+    <style>
+      * {
+        padding: 0;
+        margin: 0;
+        height: 100%;
+      }
+      body {
+        background-color: black;
+        overflow: hidden;
+      }
+      body::-webkit-scrollbar {
+        display: none;
+      }
+      #background {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        clip-path: url(#svgPath);
+      }
+      circle {
+        stroke: #000000;
+        stroke-miterlimit: 10;
+      }
+    </style>
+    <script>
+     // load any incoming URL parameters. you could just use the
+     // URLSearchParams object directly to manage these variables, but
+     // having them in a hash is a little easier sometimes.
+     var tmpParams = new URLSearchParams(document.location.search);
+     window.urlParams = {};
+
+     for(let k of tmpParams.keys() ) {
+       window.urlParams[k] = tmpParams.get(k);
+     }
+    </script>
+  </head>
+  <body>
+    <div id="background"></div>
+  </body>
+  <script>
+    // https://www.sarasoueidan.com/blog/css-svg-clipping/
+    const borderPadding = 5;
+    const minSize = 25;
+    const maxSize = 500;
+    const tweenCount = 2;
+    let spotlights = {};
+    let elements = [];
+
+    let url = unescape(decodeURIComponent(window.urlParams.screenshot));
+    if (url === "undefined") {
+      url = "screen.png";
+    }
+    document.querySelector("#background").style.backgroundImage = `url(${url})`;
+
+    let minDuration = 5000;
+    let durationRange = 25000;
+    let currentSize = {};
+    let currentLocation = {};
+
+    const width = 1000; // screen.availWidth;
+    const height = 500; // screen.availHeight
+
+    var redraw = function() {
+      for ( const k in spotlights ) {
+        var s = spotlights[k];
+        const el = elements[k];
+        el.setAttribute('cx', s.top);
+        el.setAttribute('cy', s.left);
+       }
+    };
+
+     // update global data with this tween update,
+     // and redraw
+     var updateSizeAttrs = function(obj) {
+       currentSize = obj;
+       doRedraw = true;
+     }
+
+     // update global data with this tween update,
+     // and redraw
+     var updateLocationAttrs = function(obj) {
+      spotlights[obj.index] = obj;
+      doRedraw = true;
+     }
+
+     // add a new tween based off the specified src
+     var addLocation = function(obj) {
+       locationTween(obj.index, obj).start();
+     }
+
+    var locationTween = function(index, src) {
+      var tween;
+      if ( typeof(src) === "undefined" ) {
+        src = {
+          top: borderPadding + Math.random() * (height - borderPadding),
+          left: borderPadding + Math.random() * (width - borderPadding),
+        }
+      }
+
+      var dest = {
+        top: (src.top + (Math.random() + 0.2) * height) % height,
+        left: (src.left + (Math.random() + 0.2) * width) % width,
+      };
+
+      src.index = index;
+      dest.index = index;
+
+      var duration = minDuration + Math.random() * durationRange;
+      tween = new TWEEN.Tween(src)
+                      .to(dest, duration)
+                      // .easing(TWEEN.Easing.Quadratic.Out) // Use an easing function to make the animation smooth.
+                      .onUpdate(updateLocationAttrs)
+                      .onComplete(addLocation);
+      return tween;
+    }
+
+    const holder = document.querySelector('clipPath');
+    let circles = [];
+
+    for ( var i = 0 ; i < tweenCount; i++ ) {
+      circles.push(`<circle id="circle-${i}" r="100" />`);
+    }
+
+    const svgGuts = '<svg height="0" width="0">' +
+      '<defs>' +
+        '<clipPath id="svgPath">' +
+          circles.join('') +
+        '</clipPath>' +
+      '</defs>' +
+    '</svg>'
+
+    const el = document.createRange().createContextualFragment(svgGuts);
+    document.body.appendChild(el);
+
+    // setup initial gradient tweens
+    for ( var i = 0 ; i < tweenCount; i++ ) {
+      elements.push(document.querySelector(`#circle-${i}`));
+      locationTween(i).start();
+    }
+
+    let halftime = false;
+    let doRedraw = false;
+
+    // Setup the animation loop.
+    function animate(time) {
+      if ( halftime === false ) {
+        halftime = true;
+      }
+      else {
+        halftime = false;
+        if ( doRedraw ) {
+          doRedraw = false;
+          redraw();
+        }
+        TWEEN.update(time);
+      }
+      requestAnimationFrame(animate);
+    }
+    animate();
+  </script>
+</html>
