@@ -2,7 +2,7 @@
 <html>
   <head>
     <title>spotlight</title>
-    <script src="../__assets/Tween.js"></script>
+    <script src="vector2js.js"></script>
     <style>
       * {
         padding: 0;
@@ -46,12 +46,17 @@
   </body>
   <script>
     // https://www.sarasoueidan.com/blog/css-svg-clipping/
-    const borderPadding = 5;
-    const minSize = 25;
-    const maxSize = 500;
-    const tweenCount = 2;
+    const borderPadding = 225;
+    const count = 2;
     let spotlights = {};
     let elements = [];
+
+    let positions = [];
+    let velocities = [];
+    let accels = [];
+    let circles = [];
+
+    let maxspeed = 1;
 
     let url = unescape(decodeURIComponent(window.urlParams.screenshot));
     if (url === "undefined") {
@@ -59,72 +64,48 @@
     }
     document.querySelector("#background").style.backgroundImage = `url(${url})`;
 
-    let minDuration = 5000;
-    let durationRange = 25000;
-    let currentSize = {};
-    let currentLocation = {};
-
     const width = 1000; // screen.availWidth;
-    const height = 500; // screen.availHeight
+    const height = 1000; // screen.availHeight
 
     var redraw = function() {
-      for ( const k in spotlights ) {
-        var s = spotlights[k];
-        const el = elements[k];
-        el.setAttribute('cx', s.top);
-        el.setAttribute('cy', s.left);
-       }
-    };
+      for ( var i = 0 ; i < count; i++ ) {
+        accels[i].x = (Math.random() - 0.5) *  0.2;
+        accels[i].y = (Math.random() - 0.5) *  0.2;
+        
+        velocities[i] = velocities[i].add(accels[i]);
 
-     // update global data with this tween update,
-     // and redraw
-     var updateSizeAttrs = function(obj) {
-       currentSize = obj;
-       doRedraw = true;
-     }
+        // todo limit better
+        const magSq = (velocities[i].x * velocities[i].x) + (velocities[i].y + velocities[i].y);
+        if ( magSq > maxspeed * maxspeed ) {
+          velocities[i] = velocities[i].div(Math.sqrt(magSq)).mul(maxspeed);
+        }
 
-     // update global data with this tween update,
-     // and redraw
-     var updateLocationAttrs = function(obj) {
-      spotlights[obj.index] = obj;
-      doRedraw = true;
-     }
+        positions[i] = positions[i].add(velocities[i]);
+        
+        const el = elements[i];
+        el.setAttribute('cx', positions[i].x);
+        el.setAttribute('cy', positions[i].y);
 
-     // add a new tween based off the specified src
-     var addLocation = function(obj) {
-       locationTween(obj.index, obj).start();
-     }
+        // handle wraparound
+        if ( positions[i].x > width + borderPadding ) {
+          positions[i].x = -borderPadding;
+        }
+        else if ( positions[i].x < -borderPadding) {
+          positions[i].x = width + borderPadding;
+        }
 
-    var locationTween = function(index, src) {
-      var tween;
-      if ( typeof(src) === "undefined" ) {
-        src = {
-          top: borderPadding + Math.random() * (height - borderPadding),
-          left: borderPadding + Math.random() * (width - borderPadding),
+        if ( positions[i].y > height + borderPadding ) {
+          positions[i].y = -borderPadding;
+        }
+        else if ( positions[i].y < -borderPadding ) {
+          positions[i].y = height + borderPadding;
         }
       }
-
-      var dest = {
-        top: (src.top + (Math.random() + 0.2) * height) % height,
-        left: (src.left + (Math.random() + 0.2) * width) % width,
-      };
-
-      src.index = index;
-      dest.index = index;
-
-      var duration = minDuration + Math.random() * durationRange;
-      tween = new TWEEN.Tween(src)
-                      .to(dest, duration)
-                      // .easing(TWEEN.Easing.Quadratic.Out) // Use an easing function to make the animation smooth.
-                      .onUpdate(updateLocationAttrs)
-                      .onComplete(addLocation);
-      return tween;
-    }
+    };
 
     const holder = document.querySelector('clipPath');
-    let circles = [];
 
-    for ( var i = 0 ; i < tweenCount; i++ ) {
+    for ( var i = 0 ; i < count; i++ ) {
       circles.push(`<circle id="circle-${i}" r="100" />`);
     }
 
@@ -140,9 +121,12 @@
     document.body.appendChild(el);
 
     // setup initial gradient tweens
-    for ( var i = 0 ; i < tweenCount; i++ ) {
+    for ( var i = 0 ; i < count; i++ ) {
       elements.push(document.querySelector(`#circle-${i}`));
-      locationTween(i).start();
+      //locationTween(i).start();
+      positions.push(new Vector(Math.random() * width, Math.random() * height));
+      velocities.push(new Vector((Math.random() * 20) - 10, (Math.random() * 20) - 10));
+      accels.push(new Vector((Math.random() * 20) - 10, (Math.random() * 20) - 10));
     }
 
     let halftime = false;
@@ -150,6 +134,7 @@
 
     // Setup the animation loop.
     function animate(time) {
+      redraw();
       if ( halftime === false ) {
         halftime = true;
       }
@@ -159,7 +144,9 @@
           doRedraw = false;
           redraw();
         }
-        TWEEN.update(time);
+        else {
+          doRedraw = true;
+        }
       }
       requestAnimationFrame(animate);
     }
