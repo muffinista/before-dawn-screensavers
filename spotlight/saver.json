@@ -1,0 +1,20 @@
+{
+  "name": "Spotlight",
+  "description": "Spotlights running across your screen",
+  "author": "Colin Mitchell",
+  "source": "index.html",
+  "options": [
+    {
+      "index": 1,
+      "name": "Count",
+      "type": "slider",
+      "description": "How many spotlights at once?",
+      "min": "1",
+      "max": "8",
+      "default": "3"
+    }
+  ],
+  "requirements": [
+    "screen"
+  ]
+}

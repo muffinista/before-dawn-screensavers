@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<!--
+  // https://www.sarasoueidan.com/blog/css-svg-clipping/
+-->
+<html>
+  <head>
+    <title>spotlight</title>
+    <script language="javascript" type="text/javascript" src="../__assets/p5.min.js"></script>
+    <style>
+      * {
+        padding: 0;
+        margin: 0;
+        height: 100%;
+      }
+      body {
+        background-color: black;
+        overflow: hidden;
+      }
+      body::-webkit-scrollbar {
+        display: none;
+      }
+      #background {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        clip-path: url(#svgPath);
+      }
+      circle {
+        stroke: #000000;
+        stroke-miterlimit: 10;
+        stroke-opacity: 0.5;
+      }
+    </style>
+    <script>
+     // load any incoming URL parameters. you could just use the
+     // URLSearchParams object directly to manage these variables, but
+     // having them in a hash is a little easier sometimes.
+     var tmpParams = new URLSearchParams(document.location.search);
+     window.urlParams = {};
+
+     for(let k of tmpParams.keys() ) {
+       window.urlParams[k] = tmpParams.get(k);
+     }
+    </script>
+  </head>
+  <body>
+    <div id="background"></div>
+  </body>
+  <script>
+    const minRadius = 45;
+    const maxRadius = 150;
+
+    let elements = [];
+    let radius = [];
+
+    let positions = [];
+    let velocities = [];
+    let accels = [];
+
+    let maxspeed = 3;
+
+    let height, width, count;
+
+    // figure out the screen dimensions
+    if ( typeof(window.urlParams) !== "undefined" && window.urlParams.width ) {
+      width = parseInt(window.urlParams.width, 10);
+      height = parseInt(window.urlParams.height, 10);
+      count = parseInt(window.urlParams.count, 10);
+    }
+    else {
+      width = screen.width;
+      height = screen.height;
+      count = 3;
+    }
+
+    count = 3;
+
+    let url = unescape(decodeURIComponent(window.urlParams.screenshot));
+    if (url === "undefined") {
+      url = "screen.png";
+    }
+    document.querySelector("#background").style.backgroundImage = `url(${url})`;
+
+    var redraw = function() {
+      for ( var i = 0 ; i < count; i++ ) {
+        accels[i].x = (Math.random() - 0.5) *  0.2;
+        accels[i].y = (Math.random() - 0.5) *  0.2;
+        
+        velocities[i].add(accels[i]);
+        velocities[i].limit(maxspeed);
+
+        positions[i].add(velocities[i]);
+        
+        const el = elements[i];
+        el.setAttribute('cx', positions[i].x);
+        el.setAttribute('cy', positions[i].y);
+
+        const borderPadding = radius[i];
+
+        // handle wraparound
+        if ( positions[i].x > width + borderPadding ) {
+          positions[i].x = -borderPadding;
+        }
+        else if ( positions[i].x < -borderPadding) {
+          positions[i].x = width + borderPadding;
+        }
+
+        if ( positions[i].y > height + borderPadding ) {
+          positions[i].y = -borderPadding;
+        }
+        else if ( positions[i].y < -borderPadding ) {
+          positions[i].y = height + borderPadding;
+        }
+      }
+    };
+
+    let circles = [];
+    for ( var i = 0 ; i < count; i++ ) {
+      radius.push(minRadius + (Math.random() * (maxRadius-minRadius)));
+      circles.push(`<circle id="circle-${i}" r="${radius[i]}" />`);
+    }
+
+    const svgGuts = '<svg height="0" width="0">' +
+      '<defs>' +
+        '<clipPath id="svgPath">' +
+          circles.join('') +
+        '</clipPath>' +
+      '</defs>' +
+    '</svg>'
+
+    const el = document.createRange().createContextualFragment(svgGuts);
+    document.body.appendChild(el);
+
+    for ( var i = 0 ; i < count; i++ ) {
+      elements.push(document.querySelector(`#circle-${i}`));
+      positions.push(new p5.Vector(Math.random() * width, Math.random() * height));
+      velocities.push(new p5.Vector((Math.random() * 20) - 10, (Math.random() * 20) - 10));
+      accels.push(new p5.Vector((Math.random() * 20) - 10, (Math.random() * 20) - 10));
+    }
+
+    let halftime = false;
+    let doRedraw = false;
+
+    // Setup the animation loop.
+    function animate(time) {
+      redraw();
+      if ( halftime === false ) {
+        halftime = true;
+      }
+      else {
+        halftime = false;
+        if ( doRedraw ) {
+          doRedraw = false;
+          redraw();
+        }
+        else {
+          doRedraw = true;
+        }
+      }
+      requestAnimationFrame(animate);
+    }
+    animate();
+  </script>
+</html>
