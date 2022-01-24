@@ -159,7 +159,6 @@
       var duration = minDuration + Math.random() * durationRange;
       tween = new TWEEN.Tween(src)
                       .to(dest, duration)
-                      .easing(TWEEN.Easing.Quadratic.Out) // Use an easing function to make the animation smooth.
                       .onUpdate(updateLocationAttrs)
                       .onComplete(addLocation);
       return tween;
