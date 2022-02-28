@@ -8,7 +8,7 @@
         left: 0;
         bottom: 0;
         right: 0;
-        overflow: auto;
+        overflow: hidden;
         width: 100%;
         height: 100%;
         border: none;
@@ -25,12 +25,11 @@
      window.addEventListener("load", function load(event){
        var dest = unescape(urlParams.load_url);
        var webview = document.getElementById("content");
-       console.log("let's go to " + dest);
        webview.src = dest;
      });
     </script>
   </head>
   <body>
-    <iframe id="content" src="data:text/plain,Hello, world!"></iframe>
+    <iframe id="content" scrolling="no" src="data:text/plain,Hello, world!"></iframe>
   </body>
 </html>
