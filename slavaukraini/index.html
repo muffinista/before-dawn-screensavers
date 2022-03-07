@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Slava Ukraini</title>
+    <style type="text/css">
+      body {margin:0; padding:0; cursor:none;} /* remove top and left whitespace */
+      canvas {display:block;}    /* remove scrollbars */
+      canvas:focus {outline:0;} /* remove blue outline around canvas */
+      iframe.ion-cannon  {
+        opacity: 50%;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0px;
+        left: 0px;
+      }
+    </style>
+    <script>
+     window.urlParams = window.location.search.split(/[?&]/).slice(1).map(function(paramPair) {
+       return paramPair.split(/=(.+)?/).slice(0, 2);
+     }).reduce(function (obj, pairArray) {            
+       obj[pairArray[0]] = pairArray[1];
+       return obj;
+     }, {});
+    </script>
+    <script language="javascript" type="text/javascript" src="../__assets/p5.min.js"></script>
+    <script language="javascript" type="text/javascript" src="sketch.js"></script>
+  </head>
+  <body>
+    <div id="container"></div>
+    <iframe class="ion-cannon" data-src="notwar.ho.ua.html" allowtransparency="true"/>
+  </body>
+</html>
