@@ -1,45 +1,46 @@
 {
   "name": "Say No More",
   "description": "Recreation of the After Dark screensaver 'Say What?'",
-  "aboutUrl": "https://gitlab.com/maxlefou/adquotes",
+  "aboutUrl": "https://gitlab.com/jmfergeau/adquotes",
   "author": "Max le Fou",
   "source": "index.html",
-  "options": [
+  "options":[
     {
-      "name": "quotings",
+      "name": "quotes",
       "type": "text",
-      "description": "To change the quotes, get in the screensaver's folder and edit the file 'quotes.js' in notepad."
+      "default": "saywhat",
+      "description": "You can add your own quotes in a simple txt file, putting it in the screensaver folder and put the name here without the '.txt'. The following quotes collections are included: 'saywhat', 'saymore', 'starwars' and 'mylittlepony'. Default is 'saywhat'."
     },
     {
       "name": "secs",
       "type": "slider",
-      "description": "How many seconds between quotes?",
+      "description": "How many seconds between quotes. Min. is 10 seconds, Max is 100 seconds. Default is 10.",
       "min": "10",
       "max": "100",
-      "default": "10000"
+      "default": "10"
     },
     {
       "name": "borderStyle",
       "type": "text",
       "default": "random",
-      "description": "Choices are: 'none', 'solid', 'double', 'random' and 'fullrandom'."
+      "description": "Choices are: 'none', 'solid', 'double', 'random' and 'fullrandom'. Default is 'random'."
     },
     {
       "name": "borderColor",
       "type": "text",
       "default": "original",
-      "description": "Choices are: 'original', 'random' or any html color code."
+      "description": "Choices are: 'original', 'random' or any html color code. Default is 'original'."
     },
     {
       "name": "fontStyle",
       "type": "text",
       "default": "serif",
-      "description": "Name of the used webfont. Check the screensaver's wiki to install your own font."
+      "description": "Name of the used webfont. Check the screensaver's wiki to install your own font. Default is 'serif'."
     },
     {
       "name": "fontSize",
       "type": "slider",
-      "description": "Size of the font in em.",
+      "description": "Size of the font in em. Default is 1.5.",
       "min": "1.0",
       "max": "10.0",
       "default": "1.5"
