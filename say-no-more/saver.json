@@ -4,7 +4,7 @@
   "aboutUrl": "https://gitlab.com/jmfergeau/adquotes",
   "author": "Max le Fou",
   "source": "index.html",
-  "options":[
+  "options": [
     {
       "name": "quotes",
       "type": "text",
