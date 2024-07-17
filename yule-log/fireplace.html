@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en" >
 <head>
-<!-- Pixel Fireplace 2.1 Final NoPrototype by Alex Terranova -->
-<!-- INALB -->
+<!-- Pixel Fireplace 6.0arch Final NoPrototype by Alex Terranova 2024 -->
+<!-- INALB YuleLogEdX-->
 
   <meta charset="UTF-8">
   <title>8-bit Fireplace</title>
@@ -314,110 +314,19 @@ fireplaceArrayInit();
 			}
 		
 		
-			if (id > 4 && id < 16) {
-			  var r = getRandomArbitrary(0,1.3);
-			  
-			//	if (r > 0.3) fireplaceArray[(y - 1 << 4) + x] = 4;
-		//	if (r < 1.2) fireplaceArray[(y - 1 << 4) + x] = 19;
-				//if (r > 0.5 && r < 0.999) fireplaceArray[(y - 1 << 4) + x] = 0;	
-	//		fireplaceArray[(y << 4) + x] = 0;
-
+	if (id == 20 && id == 21) {
+			 
+                var r = Math.random();
+				if (r > 0.3) fireplaceArray[(y - 1 << 4) + x] = 4;
+				if (r < 0.7) fireplaceArray[(y - 1 << 4) + x] = Math.round(Math.random() * 2 + 1) + 4;
 				
       }		// end of X
       
       
-/*
-      
-		  if (x == 0 || x == 15)
-		  {
-			if (id > 4 && id < 16) {
-				var r = Math.random();
-				if (r > 0.4) fireplaceArray[(y - 1 << 4) + x] = 4;
-				if (r < 0.4) fireplaceArray[(y - 1 << 4) + x] = Math.round(Math.random() * 2 + 1) + 4;
-				//if (r > 0.5 && r < 0.999) fireplaceArray[(y - 1 << 4) + x] = 0;	
+
+			if (id == 4) {
+				fireplaceArray[(y - 1 << 4) + x] = 4;
 				fireplaceArray[(y << 4) + x] = 0;
-			}
-      }		// end of X
-      
-      if (x == 1 || x == 14)
-		  {
-			if (id > 4 && id < 16) {
-				var r = Math.random();
-				if (r > 0.4) fireplaceArray[(y - 1 << 4) + x] = 4;
-				if (r < 0.4) fireplaceArray[(y - 1 << 4) + x] = Math.round(Math.random() * 2 + 1) + 4;
-				//if (r > 0.5 && r < 0.999) fireplaceArray[(y - 1 << 4) + x] = 0;	
-				fireplaceArray[(y << 4) + x] = 0;
-			}
-      }		// end of X
-      
-      if (x == 2 || x == 13)
-		  {
-			if (id > 4 && id < 16) {
-				var r = Math.random();
-				if (r > 0.5) fireplaceArray[(y - 1 << 4) + x] = 4;
-				if (r < 0.5) fireplaceArray[(y - 1 << 4) + x] = Math.round(Math.random() * 2 + 1) + 4;
-				//if (r > 0.5 && r < 0.999) fireplaceArray[(y - 1 << 4) + x] = 0;	
-				fireplaceArray[(y << 4) + x] = 0;
-			}
-      }		// end of X
-      
-      if (x == 3 || x == 12)
-		  {
-			if (id > 4 && id < 16) {
-				var r = Math.random();
-				if (r > 0.6) fireplaceArray[(y - 1 << 4) + x] = 4;
-				if (r < 0.6) fireplaceArray[(y - 1 << 4) + x] = Math.round(Math.random() * 2 + 1) + 4;
-				//if (r > 0.5 && r < 0.999) fireplaceArray[(y - 1 << 4) + x] = 0;	
-				fireplaceArray[(y << 4) + x] = 0;
-			}
-      }		// end of X
-      
-      if (x == 4 || x == 11)
-		  {
-			if (id > 4 && id < 16) {
-				var r = Math.random();
-				if (r > 0.8) fireplaceArray[(y - 1 << 4) + x] = 4;
-				if (r < 0.8) fireplaceArray[(y - 1 << 4) + x] = Math.round(Math.random() * 2 + 1) + 4;
-				//if (r > 0.5 && r < 0.999) fireplaceArray[(y - 1 << 4) + x] = 0;	
-				fireplaceArray[(y << 4) + x] = 0;
-			}
-      }		// end of X
-      
-      if (x == 5 || x == 10)
-		  {
-			if (id > 4 && id < 16) {
-				var r = Math.random();
-				if (r > 0.7) fireplaceArray[(y - 1 << 4) + x] = 4;
-				if (r < 0.7) fireplaceArray[(y - 1 << 4) + x] = Math.round(Math.random() * 2 + 1) + 4;
-				//if (r > 0.5 && r < 0.999) fireplaceArray[(y - 1 << 4) + x] = 0;	
-				fireplaceArray[(y << 4) + x] = 0;
-			}
-      }		// end of X
-      
-      if (x == 6 || x == 9)
-		  {
-			if (id > 4 && id < 16) {
-				var r = Math.random();
-				if (r > 0.8) fireplaceArray[(y - 1 << 4) + x] = 4;
-				if (r < 0.8) fireplaceArray[(y - 1 << 4) + x] = Math.round(Math.random() * 2 + 1) + 4;
-				//if (r > 0.5 && r < 0.999) fireplaceArray[(y - 1 << 4) + x] = 0;	
-				fireplaceArray[(y << 4) + x] = 0;
-			}
-      }		// end of X
-      
-      if (x == 7 || x == 8)
-		  {
-			if (id > 4 && id < 16) {
-				var r = Math.random();
-				if (r > 0.7) fireplaceArray[(y - 1 << 4) + x] = 4;
-				if (r < 0.7) fireplaceArray[(y - 1 << 4) + x] = Math.round(Math.random() * 2 + 1) + 4;
-				//if (r > 0.5 && r < 0.999) fireplaceArray[(y - 1 << 4) + x] = 0;	
-				fireplaceArray[(y << 4) + x] = 0;
-			}
-      }		// end of X*/
-			
-			if (id == 0) {
-			//	fireplaceArray[(y + swayy - 0 << 4 + gotcha) + x + swayx] = 4 + edge;
 			//	fireplaceArray[(y + swayy << 4 + gotcha) + x + swayx] = 0;
 			}
 			
@@ -588,22 +497,42 @@ var lame = Math.floor(Math.random() * ((3) - (0)) + (0));
 //var lame = 0;   
   for (ear = 0; ear < 16; ear++)
    {
-    if (ear == 0 || ear == 15 )
-     dmin = 7;
-    if (ear == 1 || ear == 14 )
-     dmin = 6;    
-     if (ear == 2 || ear == 13 )
-     dmin = 3;
-     if (ear == 3 || ear == 12 )
-     dmin = 4;
-     if (ear == 4 || ear == 11 )
-     dmin =  3;
-     if (ear == 5 || ear == 10 )
-     dmin =  2;    
-     if (ear == 6 || ear == 9 )
-     dmin =  2;    
-     if (ear == 7 || ear == 8 )
-     dmin =  2;    
+    if (ear == 0)
+     dmin = Math.round(getRandomArbitrary(8,11));  
+    if (ear == 1)
+     dmin = Math.round(getRandomArbitrary(7,10));    
+     if (ear == 2)
+     dmin = Math.round(getRandomArbitrary(7,8));
+     if (ear == 3)
+     dmin = Math.round(getRandomArbitrary(5,8));
+     if (ear == 4)
+     dmin =  Math.round(getRandomArbitrary(5,8));
+     if (ear == 5)
+     dmin =  Math.round(getRandomArbitrary(4,6));     
+     if (ear == 6)
+     dmin =  Math.round(getRandomArbitrary(4,6));     
+     if (ear == 7)
+     dmin =  Math.round(getRandomArbitrary(3,5));  
+
+
+if (ear == 15 )
+     dmin = Math.round(getRandomArbitrary(7,10));  
+    if (ear == 14 )
+     dmin = Math.round(getRandomArbitrary(6,9));    
+     if (ear == 13 )
+     dmin = Math.round(getRandomArbitrary(5,7));
+     if (ear == 12 )
+     dmin = Math.round(getRandomArbitrary(4,6));
+     if (ear == 11 )
+     dmin =  Math.round(getRandomArbitrary(3,5));
+     if (ear == 10 )
+     dmin =  Math.round(getRandomArbitrary(2,4));     
+     if (ear == 9 )
+     dmin =  Math.round(getRandomArbitrary(2,4));     
+     if (ear == 8 )
+     dmin =  Math.round(getRandomArbitrary(2,4)); 
+
+ 
      match++;
      if (forevermax < 18)
      if (match > 9128)
@@ -615,9 +544,9 @@ var lame = Math.floor(Math.random() * ((3) - (0)) + (0));
      forevermax = 18;
      }
      forevermin++;
-     if (forevermin > (13))
+     if (forevermin > (0))
      {
-     forevermin = 14;
+     forevermin = 18;
      }
 
      }
@@ -629,8 +558,8 @@ var lame = Math.floor(Math.random() * ((3) - (0)) + (0));
    {
   
   //  robit = robit - 16;
-  
-if (alej < 6)
+  /*
+if (alej < 8)
 {
 if (smart == -1)
  {
@@ -649,59 +578,68 @@ divine = Math.round(getRandomArbitrary(0,1));
 }
 }
 
-if (alej < 10)
+if (alej > 7)
 {
 if (smart2 == -1)
  {
 
- //divinex = Math.round(getRandomArbitrary(-1,0));
+ divinex = Math.round(getRandomArbitrary(-1,0));
  }
  if (smart2 == 0)
  {
 	//	topbot = Math.random() < 0.5 ? 0 : -32;
-//divinex = Math.round(getRandomArbitrary(-1,1));
+divinex = Math.round(getRandomArbitrary(-1,1));
 }
  if (smart2 == 1)
  {
 
-//divinex = Math.round(getRandomArbitrary(0,1));
-}}
+divinex = Math.round(getRandomArbitrary(0,1));
+}
+  
+  
+  
+}
+*/
+
+
+
 var defaultLR1 = 240 + 32;
 var defaultLR2 = 255 + 32;
-   var equation1 = (defaultLR1 + (ear));
+   var equation1 = (defaultLR1 + (ear) + divine + divinex);
    var myrandomzh = myrandomz;
    // var equation1 = (240 + robit - topbot + topz + divine + divinex);
   //  var equation2 = (256 + robit - topbot - topz + divine + divinex);
 		for (var i = 0; i < (myrandomz); i++)
 		{
 	  
-		if   (equation1 != defaultLR1 && equation1 != defaultLR2)
-		{
+	
 		
 if ((i * 16) < ((myrandomz * 16))) 
 	  between = Math.round(getRandomArbitrary(24,25))					
 	
+	
+if ((i * 16) == ((myrandomz * 16)-112)) 
+	  between = Math.round(getRandomArbitrary(24,25))	
 if ((i * 16) == ((myrandomz * 16)-96)) 
-	  between = Math.round(getRandomArbitrary(24,25))
-if ((i * 16) == ((myrandomz * 16)-80)) 
 	  between = Math.round(getRandomArbitrary(23,24))
-if ((i * 16) == ((myrandomz * 16)-64)) 
+if ((i * 16) == ((myrandomz * 16)-80)) 
 	  between = Math.round(getRandomArbitrary(22,23))
-if ((i * 16) == ((myrandomz * 16)-48)) 
+if ((i * 16) == ((myrandomz * 16)-64)) 
 	  between = Math.round(getRandomArbitrary(21,22))
+if ((i * 16) == ((myrandomz * 16)-48)) 
+	  between = Math.round(getRandomArbitrary(4,4))
 if ((i * 16) == ((myrandomz * 16)-32)) 
-	  between = Math.round(getRandomArbitrary(20,21))
-if ((i * 16) == ((myrandomz * 16) -16)) 
-	  between = Math.round(getRandomArbitrary(1,6))
-if ((i * 16) == ((myrandomz * 16))) 
-	  between = Math.round(getRandomArbitrary(1,5))
+	  between = Math.random() < 0.5 ? 20 : Math.round(getRandomArbitrary(20, 21));
+if ((i * 16) == ((myrandomz * 16)-16)) 
+	  between = Math.round(getRandomArbitrary(4, 4))
+
 
 	
 		fireplaceArray[(defaultLR1 + ear) + (i * -16)] = between;
 		
 		  
-		}
-		
+	
+		/*
 	if   (equation1 == defaultLR1 || equation1 == defaultLR2)
 		{
 		
@@ -729,17 +667,17 @@ if ((i * 16) == ((myrandomz * 16)-48))
 if ((i * 16) == ((myrandomz * 16)-32)) 
 	  between = Math.round(getRandomArbitrary(1,6))
 if ((i * 16) == ((myrandomz * 16) -16)) 
-	  between = Math.round(getRandomArbitrary(1,6))
+	  between = Math.round(getRandomArbitrary(1,5))
 if ((i * 16) == ((myrandomz * 16))) 
-	  between = Math.round(getRandomArbitrary(1,6))
+	  between = Math.round(getRandomArbitrary(1,5))
 
 	
 		fireplaceArray[(defaultLR1 + ear) + (i * -16)] = between;
 		
 		  
 		}			
-		
-		
+		*/
+		/*
 	
 	if   (equation1 == (defaultLR1 + 1) || equation1 == (defaultLR2 - 1))
 		{
@@ -776,7 +714,7 @@ if ((i * 16) == ((myrandomz * 16)-48))
 if ((i * 16) == ((myrandomz * 16)-32)) 
 	  between = Math.round(getRandomArbitrary(20,21))
 if ((i * 16) == ((myrandomz * 16) -16)) 
-	  between = Math.round(getRandomArbitrary(1,6))
+	  between = Math.round(getRandomArbitrary(1,5))
 if ((i * 16) == ((myrandomz * 16))) 
 	  between = Math.round(getRandomArbitrary(1,5))
 
@@ -784,7 +722,7 @@ if ((i * 16) == ((myrandomz * 16)))
 		fireplaceArray[(defaultLR1 + ear) + (i * -16)] = between;
 		
 	
-		}	
+		}	*/
 	
 
 	
@@ -2096,7 +2034,7 @@ animate();*/
 
 };
 
-const fps = 8;
+const fps = 9;
 
 var t;
 
