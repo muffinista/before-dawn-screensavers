@@ -1,0 +1,11 @@
+{
+  "name": "Robo Mower",
+  "description": "A robotic mower cutting grass",
+  "aboutUrl": "http://muffinlabs.com/",
+  "author": "Colin Mitchell",
+  "source": "index.html",
+  "options": [],
+  "requirements": [
+    "none"
+  ]
+}
