@@ -1,7 +1,7 @@
 {
   "name": "Emoji Starfield",
   "source": "index.html",
-  "description": "Emoji flying through space. Emojis from the twemoji project",
+  "description": "Emoji flying through space. Emojis from the open emoji project",
   "aboutUrl": "http://muffinlabs.com/",
   "requirements": [
     "none"
