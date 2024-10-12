@@ -18,7 +18,7 @@ for the application.
 
 ## Copyright/License
 
-Unless otherwise stated, Copyright (c) 2016 Colin Mitchell.
+Unless otherwise stated, Copyright (c) 2024 Colin Mitchell.
 
 Before Dawn is is distributed under the MIT licence -- Please see LICENSE.txt for further details.
 
