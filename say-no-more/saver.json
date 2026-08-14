@@ -1,7 +1,7 @@
 {
   "name": "Say No More",
   "description": "Recreation of the After Dark screensaver 'Say What?'",
-  "aboutUrl": "https://gitlab.com/jmfergeau/adquotes",
+  "aboutUrl": "https://github.com/jmfergeau/adquotes",
   "author": "Max le Fou",
   "source": "index.html",
   "options": [
